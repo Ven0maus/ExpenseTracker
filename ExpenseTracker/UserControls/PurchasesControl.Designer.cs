@@ -52,7 +52,7 @@
             BtnAdd.Location = new Point(692, 176);
             BtnAdd.Name = "BtnAdd";
             BtnAdd.Size = new Size(91, 47);
-            BtnAdd.TabIndex = 0;
+            BtnAdd.TabIndex = 4;
             BtnAdd.Text = "Add";
             BtnAdd.UseVisualStyleBackColor = true;
             BtnAdd.Click += BtnAdd_Click;
@@ -62,7 +62,7 @@
             NrAmount.Location = new Point(533, 200);
             NrAmount.Name = "NrAmount";
             NrAmount.Size = new Size(153, 23);
-            NrAmount.TabIndex = 3;
+            NrAmount.TabIndex = 2;
             // 
             // label2
             // 
@@ -91,14 +91,14 @@
             DatePicker.Location = new Point(533, 85);
             DatePicker.Name = "DatePicker";
             DatePicker.Size = new Size(250, 23);
-            DatePicker.TabIndex = 6;
+            DatePicker.TabIndex = 0;
             // 
             // TxtShopName
             // 
             TxtShopName.Location = new Point(533, 139);
             TxtShopName.Name = "TxtShopName";
             TxtShopName.Size = new Size(250, 23);
-            TxtShopName.TabIndex = 8;
+            TxtShopName.TabIndex = 1;
             // 
             // label4
             // 
@@ -125,6 +125,7 @@
             PurchasesGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             PurchasesGrid.Size = new Size(511, 560);
             PurchasesGrid.TabIndex = 9;
+            PurchasesGrid.TabStop = false;
             PurchasesGrid.SelectionChanged += PurchasesGrid_SelectionChanged;
             // 
             // IdCol
@@ -168,6 +169,7 @@
             NrTotal.ReadOnly = true;
             NrTotal.Size = new Size(250, 23);
             NrTotal.TabIndex = 10;
+            NrTotal.TabStop = false;
             // 
             // LblTitle
             // 
@@ -186,7 +188,7 @@
             BtnDelete.Location = new Point(533, 235);
             BtnDelete.Name = "BtnDelete";
             BtnDelete.Size = new Size(250, 30);
-            BtnDelete.TabIndex = 13;
+            BtnDelete.TabIndex = 5;
             BtnDelete.Text = "Delete Selected";
             BtnDelete.UseVisualStyleBackColor = true;
             BtnDelete.Click += BtnDelete_Click;
@@ -197,9 +199,11 @@
             BtnShowToday.Name = "BtnShowToday";
             BtnShowToday.Size = new Size(138, 30);
             BtnShowToday.TabIndex = 14;
+            BtnShowToday.TabStop = false;
             BtnShowToday.Text = "Show Today";
             BtnShowToday.UseVisualStyleBackColor = true;
             BtnShowToday.Visible = false;
+            BtnShowToday.Click += BtnShowToday_Click;
             // 
             // PurchasesControl
             // 

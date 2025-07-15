@@ -1,6 +1,6 @@
 ﻿namespace ExpenseTracker.UserControls
 {
-    internal interface IUserControl
+    public interface IUserControl
     {
         void OnLoad();
     }

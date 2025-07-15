@@ -50,6 +50,7 @@
             BtnViewPurchases.TabIndex = 1;
             BtnViewPurchases.Text = "View Purchases Of Selection";
             BtnViewPurchases.UseVisualStyleBackColor = true;
+            BtnViewPurchases.Click += BtnViewPurchases_Click;
             // 
             // LblTitle
             // 

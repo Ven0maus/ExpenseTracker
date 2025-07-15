@@ -4,10 +4,13 @@ namespace ExpenseTracker
 {
     public partial class AppForm : Form
     {
+        public static AppForm Instance { get; private set; }
+
         private readonly Dictionary<Views, UserControl> _views = [];
 
         public AppForm()
         {
+            Instance = this;
             InitializeComponent();
             InitDatabase();
             InitViews();
@@ -47,7 +50,7 @@ namespace ExpenseTracker
             LoadContent(_views[Views.Settings]);
         }
 
-        private void LoadContent(UserControl control)
+        private void LoadContent(UserControl control, bool executeOnLoad = true)
         {
             ContentPanel.Controls.Clear();
             control.Dock = DockStyle.Fill;
@@ -55,16 +58,30 @@ namespace ExpenseTracker
             ContentPanel.Controls.Add(control);
 
             // Execute interface methods
-            var controlInterface = control as IUserControl;
-            controlInterface?.OnLoad();
+            if (executeOnLoad)
+            {
+                var controlInterface = control as IUserControl;
+                controlInterface?.OnLoad();
+            }
         }
 
-        private enum Views
+        public void LoadContentCustom<T>(Views view, Action<T> onLoad)
+            where T : UserControl, IUserControl
         {
-            Dashboard,
-            Calendar,
-            Purchases,
-            Settings
+            var control = _views[view];
+            if (control is not T castedControl)
+                return;
+
+            LoadContent(castedControl, false);
+            onLoad?.Invoke(castedControl);
         }
+    }
+
+    public enum Views
+    {
+        Dashboard,
+        Calendar,
+        Purchases,
+        Settings
     }
 }

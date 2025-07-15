@@ -13,26 +13,74 @@ namespace ExpenseTracker
         public void OnLoad()
         {
             var today = DateTime.Today.Date;
-            var todaysPurchases = PurchaseDatabase.GetByDates(today, today);
+            var purchases = PurchaseDatabase.GetByDates(today, today);
             PurchasesGrid.Rows.Clear();
-            foreach (var purchase in todaysPurchases)
+            foreach (var purchase in purchases)
             {
-                PurchasesGrid.Rows.Add(purchase.Id, purchase.Shop, purchase.Price);
+                PurchasesGrid.Rows.Add(purchase.Id, purchase.Shop, purchase.Price.ToString(CultureInfo.InvariantCulture));
             }
             DatePicker.Value = today;
+            DatePicker.Enabled = true;
+            LblTitle.Text = "Purchases | Today";
+            BtnShowToday.Visible = false;
+
+            SetTotal();
+        }
+
+        public void LoadCustom(DateTime from, DateTime to)
+        {
+            var purchases = PurchaseDatabase.GetByDates(from, to);
+            PurchasesGrid.Rows.Clear();
+            foreach (var purchase in purchases)
+            {
+                PurchasesGrid.Rows.Add(purchase.Id, purchase.Shop, purchase.Price.ToString(CultureInfo.InvariantCulture));
+            }
+
+            // Adjust date picker properly
+            if (from.Date != to.Date)
+            {
+                DatePicker.Enabled = false;
+                LblTitle.Text = $"Purchases | {from.Date.ToString("d")} - {to.Date.ToString("d")}";
+                BtnShowToday.Visible = true;
+            }
+            else
+            {
+                DatePicker.Enabled = true;
+                DatePicker.Value = from.Date;
+
+                if (from.Date == DateTime.Today.AddDays(-1).Date)
+                {
+                    LblTitle.Text = "Purchases | Yesterday";
+                    BtnShowToday.Visible = true;
+                }
+                else if (from.Date == DateTime.Today.Date)
+                {
+                    LblTitle.Text = "Purchases | Today";
+                    BtnShowToday.Visible = false;
+                }
+                else
+                {
+                    LblTitle.Text = $"Purchases | {from.Date.ToString("d")}";
+                    BtnShowToday.Visible = true;
+                }
+            }
+
+            SetTotal();
         }
 
         private void BtnAdd_Click(object sender, EventArgs e)
         {
             var purchase = new Purchase();
-            if (decimal.TryParse(NrAmount.Text, CultureInfo.InvariantCulture, out var price))
+            if (decimal.TryParse(NrAmount.Text.Replace(",", "."), CultureInfo.InvariantCulture, out var price))
             {
                 purchase.Shop = TxtShopName.Text;
                 purchase.Price = price;
                 purchase.Date = DatePicker.Value;
 
                 PurchaseDatabase.Create(purchase);
-                PurchasesGrid.Rows.Add(purchase.Id, purchase.Shop, purchase.Price);
+                PurchasesGrid.Rows.Add(purchase.Id, purchase.Shop, purchase.Price.ToString(CultureInfo.InvariantCulture));
+
+                SetTotal();
             }
         }
 
@@ -47,6 +95,7 @@ namespace ExpenseTracker
                     PurchaseDatabase.Delete(new Purchase { Id = idInteger });
                     PurchasesGrid.ClearSelection();
                     PurchasesGrid.Rows.Remove(row);
+                    SetTotal();
                 }
             }
         }
@@ -54,6 +103,19 @@ namespace ExpenseTracker
         private void PurchasesGrid_SelectionChanged(object sender, EventArgs e)
         {
             BtnDelete.Enabled = PurchasesGrid.SelectedRows.Count > 0;
+        }
+
+        private void SetTotal()
+        {
+            var total = PurchasesGrid.Rows
+                .OfType<DataGridViewRow>()
+                .Sum(a => decimal.Parse(a.Cells["AmountCol"].Value.ToString(), CultureInfo.InvariantCulture));
+            NrTotal.Text = "€ " + total.ToString(CultureInfo.InvariantCulture);
+        }
+
+        private void BtnShowToday_Click(object sender, EventArgs e)
+        {
+            OnLoad();
         }
     }
 }

@@ -11,7 +11,15 @@ namespace ExpenseTracker
 
         public void OnLoad()
         {
-            
+
+        }
+
+        private void BtnViewPurchases_Click(object sender, EventArgs e)
+        {
+            AppForm.Instance.LoadContentCustom<PurchasesControl>(Views.Purchases, (control) =>
+            {
+                control.LoadCustom(Calendar.SelectionStart.Date, Calendar.SelectionEnd.Date);
+            });
         }
     }
 }
