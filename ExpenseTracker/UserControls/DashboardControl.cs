@@ -282,7 +282,7 @@ namespace ExpenseTracker
 
             // --- Daily average (based on distinct days with data)
             var allDaily = PurchaseDatabase.GetByDates(earliestDate, today);
-            var totalDays = allDaily.Select(p => p.Date.Date).Distinct().Count();
+            var totalDays = (today - earliestDate).Days + 1;
             decimal avgDaily = totalDays > 0 ? allDaily.Sum(p => p.Price) / totalDays : 0;
             NrAvgDailySpend.Text = Math.Round(avgDaily, 2).ToEuroFormat();
 
