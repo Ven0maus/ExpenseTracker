@@ -1,5 +1,5 @@
+using ExpenseTracker.Core;
 using ExpenseTracker.UserControls;
-using System.ComponentModel;
 
 namespace ExpenseTracker
 {
@@ -24,8 +24,15 @@ namespace ExpenseTracker
 
         private static void InitDatabase()
         {
-            string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "expenses.db");
+            string dbPath = null;
+#if DEBUG
+            // Generate debug data + setup debug db
+            dbPath = Path.Combine(SettingsControl.GetAppStoragePath(), "expenses_debug.db");
+            TestDataCreator.InitDebugDatabase(dbPath, 365 * TestDataCreator.DebugDataYears, TestDataCreator.DebugDataSeed);
+#else
+            dbPath = Path.Combine(SettingsControl.GetAppStoragePath(), "expenses.db");
             PurchaseDatabase.InitializeDatabase(dbPath);
+#endif
         }
 
         private void InitViews()

@@ -1,4 +1,5 @@
-﻿using ExpenseTracker.UserControls;
+﻿using ExpenseTracker.Core;
+using ExpenseTracker.UserControls;
 using System.Globalization;
 
 namespace ExpenseTracker

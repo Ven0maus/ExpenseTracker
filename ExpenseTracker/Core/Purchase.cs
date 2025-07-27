@@ -1,4 +1,4 @@
-﻿namespace ExpenseTracker
+﻿namespace ExpenseTracker.Core
 {
     internal class Purchase
     {

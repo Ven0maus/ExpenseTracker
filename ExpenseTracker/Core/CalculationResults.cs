@@ -1,6 +1,6 @@
-﻿using static ExpenseTracker.CategorySummaryData;
+﻿using static ExpenseTracker.Core.CategorySummaryData;
 
-namespace ExpenseTracker
+namespace ExpenseTracker.Core
 {
     internal class CalculationResults
     {

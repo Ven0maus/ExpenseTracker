@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 
-namespace ExpenseTracker
+namespace ExpenseTracker.Core
 {
     internal static class PurchaseDatabase
     {

@@ -1,4 +1,4 @@
-﻿namespace ExpenseTracker
+﻿namespace ExpenseTracker.Core
 {
     internal class InsightGenerators
     {
@@ -52,11 +52,11 @@
             var monthlyBudget = settingsControl.Settings.MonthlyBudget;
 
             // Percent of budget spent so far
-            decimal percentSpent = monthlyBudget == 0 ? 0 : (totalSpent / monthlyBudget) * 100m;
+            decimal percentSpent = monthlyBudget == 0 ? 0 : totalSpent / monthlyBudget * 100m;
 
             // Percent of month completed
             int daysInMonth = DateTime.DaysInMonth(today.Year, today.Month);
-            decimal percentMonthComplete = ((decimal)today.Day / daysInMonth) * 100m;
+            decimal percentMonthComplete = (decimal)today.Day / daysInMonth * 100m;
 
             // Only generate insight if spending is significantly ahead or behind schedule (e.g., 10%)
             const decimal threshold = 10m;
@@ -104,7 +104,7 @@
             if (secondDayCount == 0 || topDay.Count < 5) // require at least 5 purchases for significance
                 return null;
 
-            decimal increasePercent = ((decimal)(topDay.Count - secondDayCount) / secondDayCount) * 100m;
+            decimal increasePercent = (decimal)(topDay.Count - secondDayCount) / secondDayCount * 100m;
 
             if (increasePercent < 20) // not significant enough difference
                 return null;
@@ -140,7 +140,7 @@
             if (lastMonthAvg == 0) // avoid division by zero
                 return null;
 
-            var changePercent = ((thisMonthAvg - lastMonthAvg) / lastMonthAvg) * 100m;
+            var changePercent = (thisMonthAvg - lastMonthAvg) / lastMonthAvg * 100m;
 
             if (Math.Abs(changePercent) < 20)
                 return null;
@@ -166,7 +166,7 @@
 
             if (lastWeekTotal == 0) return null;
 
-            var percent = ((thisWeekTotal - lastWeekTotal) / lastWeekTotal) * 100;
+            var percent = (thisWeekTotal - lastWeekTotal) / lastWeekTotal * 100;
             if (Math.Abs(percent) < 10) return null;
 
             var direction = percent > 0 ? "more" : "less";
@@ -232,7 +232,7 @@
 
             if (lastAvg == 0) return null;
 
-            var percentChange = ((thisAvg - lastAvg) / lastAvg) * 100;
+            var percentChange = (thisAvg - lastAvg) / lastAvg * 100;
             if (Math.Abs(percentChange) < 15) return null;
 
             var dir = percentChange > 0 ? "above" : "below";
@@ -346,7 +346,7 @@
             if (last3MonthsDailyAvg == 0 || thisMonthDailyAvg <= last3MonthsDailyAvg)
                 return null;
 
-            decimal percentAbove = ((thisMonthDailyAvg - last3MonthsDailyAvg) / last3MonthsDailyAvg) * 100m;
+            decimal percentAbove = (thisMonthDailyAvg - last3MonthsDailyAvg) / last3MonthsDailyAvg * 100m;
 
             return new SpendingInsight
             {
@@ -428,7 +428,7 @@
 
             if (weekdayTotal == 0 || weekendTotal / weekdayTotal < 1.5m) return null;
 
-            var percent = ((weekendTotal - weekdayTotal) / weekdayTotal) * 100;
+            var percent = (weekendTotal - weekdayTotal) / weekdayTotal * 100;
             return new SpendingInsight
             {
                 Category = InsightCategory.Trend,

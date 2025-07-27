@@ -39,13 +39,17 @@ namespace ExpenseTracker
             SaveFile();
         }
 
-        private static string GetSettingsFilePath()
+        public static string GetAppStoragePath()
         {
-            string settingsDir = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
+            return Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "ExpenseTracker"
             );
-            return Path.Combine(settingsDir, "settings.json");
+        }
+
+        private static string GetSettingsFilePath()
+        {
+            return Path.Combine(GetAppStoragePath(), "settings.json");
         }
 
         private void SaveFile()
