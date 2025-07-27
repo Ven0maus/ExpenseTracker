@@ -71,7 +71,6 @@
             label21 = new Label();
             NrThisYearTotal = new Label();
             label23 = new Label();
-            sqliteCommand1 = new Microsoft.Data.Sqlite.SqliteCommand();
             panel6 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             SpendTrendValue5 = new Label();
@@ -101,7 +100,7 @@
             panel8 = new Panel();
             label32 = new Label();
             panel9 = new Panel();
-            TxtSpendingAnomalies = new Label();
+            ListSpendingAnomalies = new ListBox();
             label33 = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -612,13 +611,6 @@
             label23.TabIndex = 0;
             label23.Text = "This Year Total:";
             // 
-            // sqliteCommand1
-            // 
-            sqliteCommand1.CommandTimeout = 30;
-            sqliteCommand1.Connection = null;
-            sqliteCommand1.Transaction = null;
-            sqliteCommand1.UpdatedRowSource = System.Data.UpdateRowSource.None;
-            // 
             // panel6
             // 
             panel6.BackColor = Color.FromArgb(25, 30, 50);
@@ -957,30 +949,32 @@
             // panel9
             // 
             panel9.BackColor = Color.FromArgb(25, 30, 50);
-            panel9.Controls.Add(TxtSpendingAnomalies);
+            panel9.Controls.Add(ListSpendingAnomalies);
             panel9.Controls.Add(label33);
-            panel9.Location = new Point(6, 287);
+            panel9.Location = new Point(265, 405);
             panel9.Name = "panel9";
-            panel9.Size = new Size(254, 112);
+            panel9.Size = new Size(491, 227);
             panel9.TabIndex = 9;
             // 
-            // TxtSpendingAnomalies
+            // ListSpendingAnomalies
             // 
-            TxtSpendingAnomalies.Font = new Font("Segoe UI", 11F);
-            TxtSpendingAnomalies.ForeColor = SystemColors.Control;
-            TxtSpendingAnomalies.Location = new Point(4, 36);
-            TxtSpendingAnomalies.Name = "TxtSpendingAnomalies";
-            TxtSpendingAnomalies.Size = new Size(246, 69);
-            TxtSpendingAnomalies.TabIndex = 8;
+            ListSpendingAnomalies.BackColor = Color.FromArgb(25, 30, 50);
+            ListSpendingAnomalies.Font = new Font("Segoe UI", 11F);
+            ListSpendingAnomalies.ForeColor = SystemColors.Control;
+            ListSpendingAnomalies.FormattingEnabled = true;
+            ListSpendingAnomalies.Location = new Point(9, 37);
+            ListSpendingAnomalies.Name = "ListSpendingAnomalies";
+            ListSpendingAnomalies.Size = new Size(475, 184);
+            ListSpendingAnomalies.TabIndex = 3;
             // 
             // label33
             // 
             label33.AutoSize = true;
-            label33.Font = new Font("PMingLiU-ExtB", 15F, FontStyle.Bold);
+            label33.Font = new Font("PMingLiU-ExtB", 16F, FontStyle.Bold);
             label33.ForeColor = SystemColors.Control;
             label33.Location = new Point(5, 7);
             label33.Name = "label33";
-            label33.Size = new Size(180, 20);
+            label33.Size = new Size(199, 22);
             label33.TabIndex = 2;
             label33.Text = "Spending Anomalies";
             // 
@@ -1069,7 +1063,6 @@
         private Label label21;
         private Label NrThisYearTotal;
         private Label label23;
-        private Microsoft.Data.Sqlite.SqliteCommand sqliteCommand1;
         private Panel panel6;
         private Label label27;
         private TableLayoutPanel tableLayoutPanel1;
@@ -1099,7 +1092,7 @@
         private Panel panel8;
         private Label label32;
         private Panel panel9;
-        private Label TxtSpendingAnomalies;
         private Label label33;
+        private ListBox ListSpendingAnomalies;
     }
 }

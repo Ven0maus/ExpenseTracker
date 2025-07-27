@@ -41,7 +41,7 @@ namespace ExpenseTracker
             if (from.Date != to.Date)
             {
                 DatePicker.Enabled = false;
-                LblTitle.Text = $"Purchases | {from.Date.ToString("d")} - {to.Date.ToString("d")}";
+                LblTitle.Text = $"Purchases | {from.Date:d} - {to.Date:d}";
                 BtnShowToday.Visible = true;
             }
             else
@@ -61,7 +61,7 @@ namespace ExpenseTracker
                 }
                 else
                 {
-                    LblTitle.Text = $"Purchases | {from.Date.ToString("d")}";
+                    LblTitle.Text = $"Purchases | {from.Date:d}";
                     BtnShowToday.Visible = true;
                 }
             }

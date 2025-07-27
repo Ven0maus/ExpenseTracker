@@ -11,6 +11,9 @@ namespace ExpenseTracker
 
         public void OnLoad()
         {
+            // Make sure we return new data, not cached data.
+            PurchaseDatabase.ClearCaches();
+
             CalculateBudget();
             CalculatePeriod(PeriodType.Weekly);
             CalculatePeriod(PeriodType.Monthly);
@@ -24,6 +27,8 @@ namespace ExpenseTracker
         private void CalculateBudget()
         {
             NrTotalSpend.Text = PurchaseDatabase.GetAllTimeExpenses().ToEuroFormat();
+
+            // TODO: Budgeting
             NrMonthlyBudget.Text = 0.ToEuroFormat();
             NrBudgetLeft.Text = 0.ToEuroFormat();
         }
@@ -242,7 +247,7 @@ namespace ExpenseTracker
 
             NrComparedToLastWeek.Text = Math.Round(percentChange, 1).ToEuroFormat();
         }
-        */       
+        */
 
         private void CalculateAverages()
         {
@@ -259,7 +264,7 @@ namespace ExpenseTracker
 
                 // Sum and count
                 var totalAmount = purchasesThisPeriod.Sum(p => p.Price);
-                var count = purchasesThisPeriod.Count();
+                var count = purchasesThisPeriod.Length;
 
                 // Calculate average purchase amount for the period
                 decimal average = Math.Round(count > 0 ? totalAmount / count : 0, 2);
@@ -288,8 +293,8 @@ namespace ExpenseTracker
 
         private void CalculateCategorySummary()
         {
-            var period = GetPeriodDateRange(DateTime.Now, PeriodType.Monthly);
-            var purchases = PurchaseDatabase.GetByDates(period.start, period.end);
+            var (start, end) = GetPeriodDateRange(DateTime.Now, PeriodType.Monthly);
+            var purchases = PurchaseDatabase.GetByDates(start, end);
 
             // Group by category and sum totals
             var categories = purchases
@@ -347,8 +352,8 @@ namespace ExpenseTracker
 
         private void CalculateBiggestExpenses()
         {
-            var period = GetPeriodDateRange(DateTime.Now, PeriodType.Monthly);
-            var purchases = PurchaseDatabase.GetByDates(period.start, period.end);
+            var (start, end) = GetPeriodDateRange(DateTime.Now, PeriodType.Monthly);
+            var purchases = PurchaseDatabase.GetByDates(start, end);
 
             // Group by shop and sum totals
             var biggestExpenses = purchases
@@ -380,13 +385,13 @@ namespace ExpenseTracker
                 {4, BigExpenseValue5 },
             };
 
-            for (int i=0; i < biggestExpenses.Count; i++)
+            for (int i = 0; i < biggestExpenses.Count; i++)
             {
                 var purchase = biggestExpenses[i];
                 var label = expenseLabels[i];
                 var value = expenseValues[i];
 
-                label.Text = $"{i+1}. {purchase.Shop}";
+                label.Text = $"{i + 1}. {purchase.Shop}";
                 value.Text = purchase.Total.ToEuroFormat();
             }
 
@@ -394,7 +399,7 @@ namespace ExpenseTracker
             if (biggestExpenses.Count != 5)
             {
                 var leftOver = biggestExpenses.Count;
-                for (int i=4; i >= leftOver; i--)
+                for (int i = 4; i >= leftOver; i--)
                 {
                     var label = expenseLabels[i];
                     var value = expenseValues[i];
@@ -406,7 +411,55 @@ namespace ExpenseTracker
 
         private void CalculateSpendingAnomalies()
         {
+            /* TODO:
+             *  Comparative Anomalies
 
+            "You spent X% more this week than last week."
+
+            "Your daily average this month is Y% above your usual daily average."
+
+            "You've already spent Z% of your monthly budget, and the month is only X% complete."
+
+            "This month’s spending is your highest since [Month/Year]."
+
+            "You spent less this week than any week in the last 6 months."
+
+            📈 Trend-Based Insights
+
+            "Your spending has increased for 3 consecutive weeks."
+
+            "You've spent more every Monday than any other weekday for the past 4 weeks."
+
+            "There’s a 50% increase in your weekend spending compared to weekdays."
+
+            "Average daily spending this month is trending 15% higher than the previous 3-month average."
+
+            "This is the 3rd time in a row your monthly spending increased."
+
+            🛒 Category-Specific Anomalies (if you use categories)
+
+            "You spent 3× more on Dining & Coffee this week than your usual weekly average."
+
+            "Groceries made up 60% of your spending this month — highest ever."
+
+            "No purchases were made in the Entertainment category this month — unusual!"
+
+            "Your most expensive category this month is [X], which is different from your usual [Y]."
+
+            💡 Behavior-Based Facts
+
+            "Your most expensive purchase this week was at [Shop], costing [X €]."
+
+            "You made 80% of your purchases at 3 shops: [A], [B], [C]."
+
+            "You spent something every day for the last 10 days — streak!"
+
+            "You didn’t spend anything for 3 days straight last week — rare!"
+
+            "Most of your purchases happen on [Day of Week] — pattern spotted."
+
+            "Your average purchase size increased by 20% this month."
+            */
         }
 
         private static (DateTime start, DateTime end) GetPeriodDateRange(DateTime referenceDate, PeriodType period)

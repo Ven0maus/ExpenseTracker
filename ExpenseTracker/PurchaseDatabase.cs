@@ -160,10 +160,22 @@ namespace ExpenseTracker
             }
         }
 
-        public static IEnumerable<Purchase> GetByDates(DateTime from, DateTime to)
+        /// <summary>
+        /// Returns data between 2 dates, this also caches data for multiple same period retrievals, use ClearCaches method to return new data.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static Purchase[] GetByDates(DateTime from, DateTime to)
         {
             if (!IsInitialized)
                 throw new Exception("You must initialize the database first.");
+
+            // Present a form of caching to prevent heavy load on multiple same period returns
+            var cacheKey = (from.ToUnixTimestamp(), to.ToUnixTimestamp());
+            if (_purchaseDataByDateCache.TryGetValue(cacheKey, out var cachedResults))
+                return cachedResults;
 
             long fromTs = from.ToUnixTimestamp();
             long toTs = to.ToUnixTimestamp();
@@ -181,17 +193,24 @@ namespace ExpenseTracker
             cmd.Parameters.AddWithValue("$to", toTs);
 
             using var reader = cmd.ExecuteReader();
+            var data = new List<Purchase>();
             while (reader.Read())
             {
-                yield return new Purchase
+                data.Add(new Purchase
                 {
                     Id = reader.GetInt32(0),
                     Shop = reader.GetString(1),
                     Date = reader.GetInt64(2).FromUnixTimestamp(),
                     Price = reader.GetDecimal(3),
                     Category = reader.GetString(4)
-                };
+                });
             }
+
+            // Cache the data
+            var arrData = data.ToArray();
+            _purchaseDataByDateCache[cacheKey] = arrData;
+
+            return arrData;
         }
 
         public static double GetAllTimeExpenses()
@@ -207,6 +226,16 @@ namespace ExpenseTracker
 
             var value = cmd.ExecuteScalar();
             return (double)(value is DBNull ? 0d : value);
+        }
+
+        private static readonly Dictionary<(long, long), Purchase[]> _purchaseDataByDateCache = [];
+
+        /// <summary>
+        /// Clears all cached data stored in the database, several methods cache data like GetByDates to increase retrieval speed.
+        /// </summary>
+        public static void ClearCaches()
+        {
+            _purchaseDataByDateCache.Clear();
         }
     }
 }
