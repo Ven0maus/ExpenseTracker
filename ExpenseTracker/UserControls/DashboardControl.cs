@@ -280,13 +280,25 @@ namespace ExpenseTracker
             var today = DateTime.Today;
             var earliestDate = PurchaseDatabase.GetEarliestPurchaseDate();
 
-            // --- Daily average (based on distinct days with data)
-            var allDaily = PurchaseDatabase.GetByDates(earliestDate, today);
-            var totalDays = (today - earliestDate).Days + 1;
+            // Define lookback limits
+            var dailyLookback = today.AddYears(-1);
+            var weeklyLookback = today.AddYears(-1);
+            var monthlyLookback = today.AddYears(-1);
+            var yearlyLookback = today.AddYears(-3);
+
+            // Clamp actual start dates based on available data
+            var dailyStart = earliestDate > dailyLookback ? earliestDate : dailyLookback;
+            var weeklyStart = earliestDate > weeklyLookback ? earliestDate : weeklyLookback;
+            var monthlyStart = earliestDate > monthlyLookback ? earliestDate : monthlyLookback;
+            var yearlyStart = earliestDate > yearlyLookback ? earliestDate : yearlyLookback;
+
+            // --- Daily average (include days with no purchases)
+            var allDaily = PurchaseDatabase.GetByDates(dailyStart, today);
+            var totalDays = (today - dailyStart).Days + 1;
             decimal avgDaily = totalDays > 0 ? allDaily.Sum(p => p.Price) / totalDays : 0;
             NrAvgDailySpend.Text = Math.Round(avgDaily, 2).ToEuroFormat();
 
-            // --- Weekly average (based on valid weeks with 3+ distinct days)
+            // --- Weekly average (weeks with 3+ distinct days)
             decimal totalWeekly = 0;
             int validWeeks = 0;
             var date = today;
@@ -294,7 +306,7 @@ namespace ExpenseTracker
             while (true)
             {
                 var (start, end) = date.GetWeekRange();
-                if (start < earliestDate)
+                if (end < weeklyStart)
                     break;
 
                 var weekPurchases = PurchaseDatabase.GetByDates(start, end);
@@ -312,7 +324,7 @@ namespace ExpenseTracker
             decimal avgWeekly = validWeeks > 0 ? totalWeekly / validWeeks : 0;
             NrAvgWeeklySpend.Text = Math.Round(avgWeekly, 2).ToEuroFormat();
 
-            // --- Monthly average (based on valid months with 5+ purchases)
+            // --- Monthly average (months with 5+ purchases)
             decimal totalMonthly = 0;
             int validMonths = 0;
             date = today;
@@ -320,7 +332,7 @@ namespace ExpenseTracker
             while (true)
             {
                 var (start, end) = date.GetMonthRange();
-                if (start < earliestDate)
+                if (end < monthlyStart)
                     break;
 
                 var monthPurchases = PurchaseDatabase.GetByDates(start, end);
@@ -337,7 +349,7 @@ namespace ExpenseTracker
             decimal avgMonthly = validMonths > 0 ? totalMonthly / validMonths : 0;
             NrAvgMonthlySpend.Text = Math.Round(avgMonthly, 2).ToEuroFormat();
 
-            // --- Yearly average (based on valid years with 20+ purchases)
+            // --- Yearly average (years with 20+ purchases)
             decimal totalYearly = 0;
             int validYears = 0;
             date = today;
@@ -345,7 +357,7 @@ namespace ExpenseTracker
             while (true)
             {
                 var (start, end) = date.GetYearRange();
-                if (start < earliestDate)
+                if (end < yearlyStart)
                     break;
 
                 var yearPurchases = PurchaseDatabase.GetByDates(start, end);
