@@ -23,6 +23,11 @@ namespace ExpenseTracker
             DatePicker.Enabled = true;
             LblTitle.Text = "Purchases | Today";
             BtnShowToday.Visible = false;
+            BtnAdd.Enabled = true;
+            TxtShopName.Text = string.Empty;
+            TxtShopName.Enabled = true;
+            NrAmount.Text = string.Empty;
+            NrAmount.Enabled = true;
 
             SetTotal();
         }
@@ -42,6 +47,11 @@ namespace ExpenseTracker
                 DatePicker.Enabled = false;
                 LblTitle.Text = $"Purchases | {from.Date.ToString("d")} - {to.Date.ToString("d")}";
                 BtnShowToday.Visible = true;
+                BtnAdd.Enabled = false;
+                TxtShopName.Text = string.Empty;
+                TxtShopName.Enabled = false;
+                NrAmount.Text = string.Empty;
+                NrAmount.Enabled = false;
             }
             else
             {
@@ -52,16 +62,31 @@ namespace ExpenseTracker
                 {
                     LblTitle.Text = "Purchases | Yesterday";
                     BtnShowToday.Visible = true;
+                    BtnAdd.Enabled = false;
+                    TxtShopName.Text = string.Empty;
+                    TxtShopName.Enabled = false;
+                    NrAmount.Text = string.Empty;
+                    NrAmount.Enabled = false;
                 }
                 else if (from.Date == DateTime.Today.Date)
                 {
                     LblTitle.Text = "Purchases | Today";
                     BtnShowToday.Visible = false;
+                    BtnAdd.Enabled = true;
+                    TxtShopName.Text = string.Empty;
+                    TxtShopName.Enabled = true;
+                    NrAmount.Text = string.Empty;
+                    NrAmount.Enabled = true;
                 }
                 else
                 {
                     LblTitle.Text = $"Purchases | {from.Date.ToString("d")}";
                     BtnShowToday.Visible = true;
+                    BtnAdd.Enabled = false;
+                    TxtShopName.Text = string.Empty;
+                    TxtShopName.Enabled = false;
+                    NrAmount.Text = string.Empty;
+                    NrAmount.Enabled = false;
                 }
             }
 
@@ -79,6 +104,9 @@ namespace ExpenseTracker
 
                 PurchaseDatabase.Create(purchase);
                 PurchasesGrid.Rows.Add(purchase.Id, purchase.Shop, purchase.Price.ToString(CultureInfo.InvariantCulture));
+
+                TxtShopName.Clear();
+                NrAmount.Clear();
 
                 SetTotal();
             }
