@@ -30,6 +30,13 @@ namespace ExpenseTracker
             return (start, end);
         }
 
+        public static (DateTime start, DateTime end) GetYearRange(this DateTime referenceDate)
+        {
+            var start = new DateTime(referenceDate.Year, 1, 1);
+            var end = new DateTime(referenceDate.Year, 12, 31);
+            return (start, end);
+        }
+
         // Euro
         public static string ToEuroFormat(this int value)
         {

@@ -265,44 +265,39 @@ namespace ExpenseTracker
 
         private void CalculateAverages()
         {
-            var today = DateTime.Today;
+            DateTime today = DateTime.Today;
 
-            // Loop through all period types you want averages for
-            foreach (PeriodType period in Enum.GetValues<PeriodType>())
+            // Daily (past 365 days)
+            var allDaily = PurchaseDatabase.GetByDates(today.AddDays(-364), today);
+            decimal avgDaily = allDaily.Length > 0 ? allDaily.Sum(p => p.Price) / 365m : 0;
+            NrAvgDailySpend.Text = Math.Round(avgDaily, 2).ToEuroFormat();
+
+            // Weekly (last 52 weeks)
+            decimal totalWeekly = 0;
+            for (int i = 0; i < 52; i++)
             {
-                // Get date range for current period (e.g. this week, this month, etc.)
-                var (start, end) = GetPeriodDateRange(today, period);
-
-                // Get purchases for the current period
-                var purchasesThisPeriod = PurchaseDatabase.GetByDates(start, end);
-
-                // Sum and count
-                var totalAmount = purchasesThisPeriod.Sum(p => p.Price);
-                var count = purchasesThisPeriod.Length;
-
-                // Calculate average purchase amount for the period
-                decimal average = Math.Round(count > 0 ? totalAmount / count : 0, 2);
-
-                // Now assign to UI or process further depending on period
-                switch (period)
-                {
-                    case PeriodType.Daily:
-                        NrAvgDailySpend.Text = average.ToEuroFormat();
-                        break;
-
-                    case PeriodType.Weekly:
-                        NrAvgWeeklySpend.Text = average.ToEuroFormat();
-                        break;
-
-                    case PeriodType.Monthly:
-                        NrAvgMonthlySpend.Text = average.ToEuroFormat();
-                        break;
-
-                    case PeriodType.Yearly:
-                        NrAvgYearlySpend.Text = average.ToEuroFormat();
-                        break;
-                }
+                var (start, end) = today.AddDays(-7 * i).GetWeekRange();
+                totalWeekly += PurchaseDatabase.GetByDates(start, end).Sum(p => p.Price);
             }
+            NrAvgWeeklySpend.Text = Math.Round(totalWeekly / 52m, 2).ToEuroFormat();
+
+            // Monthly (last 12 months)
+            decimal totalMonthly = 0;
+            for (int i = 0; i < 12; i++)
+            {
+                var (start, end) = today.AddMonths(-i).GetMonthRange();
+                totalMonthly += PurchaseDatabase.GetByDates(start, end).Sum(p => p.Price);
+            }
+            NrAvgMonthlySpend.Text = Math.Round(totalMonthly / 12m, 2).ToEuroFormat();
+
+            // Yearly (e.g., last 3 full years)
+            decimal totalYearly = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                var (start, end) = today.AddYears(-i).GetYearRange();
+                totalYearly += PurchaseDatabase.GetByDates(start, end).Sum(p => p.Price);
+            }
+            NrAvgYearlySpend.Text = Math.Round(totalYearly / 3m, 2).ToEuroFormat();
         }
 
         private void CalculateCategorySummary()

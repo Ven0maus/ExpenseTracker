@@ -624,8 +624,8 @@
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
             tableLayoutPanel1.Controls.Add(SpendTrendValue5, 1, 4);
             tableLayoutPanel1.Controls.Add(SpendTrendValue4, 1, 3);
             tableLayoutPanel1.Controls.Add(SpendTrendValue3, 1, 2);
@@ -650,110 +650,110 @@
             // SpendTrendValue5
             // 
             SpendTrendValue5.AutoSize = true;
-            SpendTrendValue5.Font = new Font("Segoe UI", 12F);
+            SpendTrendValue5.Font = new Font("Segoe UI", 10F);
             SpendTrendValue5.ForeColor = SystemColors.Control;
-            SpendTrendValue5.Location = new Point(169, 120);
+            SpendTrendValue5.Location = new Point(145, 120);
             SpendTrendValue5.Name = "SpendTrendValue5";
-            SpendTrendValue5.Size = new Size(22, 21);
+            SpendTrendValue5.Size = new Size(20, 19);
             SpendTrendValue5.TabIndex = 17;
             SpendTrendValue5.Text = "5.";
             // 
             // SpendTrendValue4
             // 
             SpendTrendValue4.AutoSize = true;
-            SpendTrendValue4.Font = new Font("Segoe UI", 12F);
+            SpendTrendValue4.Font = new Font("Segoe UI", 10F);
             SpendTrendValue4.ForeColor = SystemColors.Control;
-            SpendTrendValue4.Location = new Point(169, 90);
+            SpendTrendValue4.Location = new Point(145, 90);
             SpendTrendValue4.Name = "SpendTrendValue4";
-            SpendTrendValue4.Size = new Size(22, 21);
+            SpendTrendValue4.Size = new Size(20, 19);
             SpendTrendValue4.TabIndex = 16;
             SpendTrendValue4.Text = "4.";
             // 
             // SpendTrendValue3
             // 
             SpendTrendValue3.AutoSize = true;
-            SpendTrendValue3.Font = new Font("Segoe UI", 12F);
+            SpendTrendValue3.Font = new Font("Segoe UI", 10F);
             SpendTrendValue3.ForeColor = SystemColors.Control;
-            SpendTrendValue3.Location = new Point(169, 60);
+            SpendTrendValue3.Location = new Point(145, 60);
             SpendTrendValue3.Name = "SpendTrendValue3";
-            SpendTrendValue3.Size = new Size(22, 21);
+            SpendTrendValue3.Size = new Size(20, 19);
             SpendTrendValue3.TabIndex = 15;
             SpendTrendValue3.Text = "3.";
             // 
             // SpendTrendValue2
             // 
             SpendTrendValue2.AutoSize = true;
-            SpendTrendValue2.Font = new Font("Segoe UI", 12F);
+            SpendTrendValue2.Font = new Font("Segoe UI", 10F);
             SpendTrendValue2.ForeColor = SystemColors.Control;
-            SpendTrendValue2.Location = new Point(169, 30);
+            SpendTrendValue2.Location = new Point(145, 30);
             SpendTrendValue2.Name = "SpendTrendValue2";
-            SpendTrendValue2.Size = new Size(22, 21);
+            SpendTrendValue2.Size = new Size(20, 19);
             SpendTrendValue2.TabIndex = 14;
             SpendTrendValue2.Text = "2.";
             // 
             // SpendTrendValue1
             // 
             SpendTrendValue1.AutoSize = true;
-            SpendTrendValue1.Font = new Font("Segoe UI", 12F);
+            SpendTrendValue1.Font = new Font("Segoe UI", 10F);
             SpendTrendValue1.ForeColor = SystemColors.Control;
-            SpendTrendValue1.Location = new Point(169, 0);
+            SpendTrendValue1.Location = new Point(145, 0);
             SpendTrendValue1.Name = "SpendTrendValue1";
-            SpendTrendValue1.Size = new Size(22, 21);
+            SpendTrendValue1.Size = new Size(20, 19);
             SpendTrendValue1.TabIndex = 13;
             SpendTrendValue1.Text = "1.";
             // 
             // SpendTrend1
             // 
             SpendTrend1.AutoSize = true;
-            SpendTrend1.Font = new Font("Segoe UI", 12F);
+            SpendTrend1.Font = new Font("Segoe UI", 11F);
             SpendTrend1.ForeColor = SystemColors.Control;
             SpendTrend1.Location = new Point(3, 0);
             SpendTrend1.Name = "SpendTrend1";
-            SpendTrend1.Size = new Size(22, 21);
+            SpendTrend1.Size = new Size(20, 20);
             SpendTrend1.TabIndex = 8;
             SpendTrend1.Text = "1.";
             // 
             // SpendTrend2
             // 
             SpendTrend2.AutoSize = true;
-            SpendTrend2.Font = new Font("Segoe UI", 12F);
+            SpendTrend2.Font = new Font("Segoe UI", 11F);
             SpendTrend2.ForeColor = SystemColors.Control;
             SpendTrend2.Location = new Point(3, 30);
             SpendTrend2.Name = "SpendTrend2";
-            SpendTrend2.Size = new Size(22, 21);
+            SpendTrend2.Size = new Size(20, 20);
             SpendTrend2.TabIndex = 9;
             SpendTrend2.Text = "2.";
             // 
             // SpendTrend3
             // 
             SpendTrend3.AutoSize = true;
-            SpendTrend3.Font = new Font("Segoe UI", 12F);
+            SpendTrend3.Font = new Font("Segoe UI", 11F);
             SpendTrend3.ForeColor = SystemColors.Control;
             SpendTrend3.Location = new Point(3, 60);
             SpendTrend3.Name = "SpendTrend3";
-            SpendTrend3.Size = new Size(22, 21);
+            SpendTrend3.Size = new Size(20, 20);
             SpendTrend3.TabIndex = 10;
             SpendTrend3.Text = "3.";
             // 
             // SpendTrend4
             // 
             SpendTrend4.AutoSize = true;
-            SpendTrend4.Font = new Font("Segoe UI", 12F);
+            SpendTrend4.Font = new Font("Segoe UI", 11F);
             SpendTrend4.ForeColor = SystemColors.Control;
             SpendTrend4.Location = new Point(3, 90);
             SpendTrend4.Name = "SpendTrend4";
-            SpendTrend4.Size = new Size(22, 21);
+            SpendTrend4.Size = new Size(20, 20);
             SpendTrend4.TabIndex = 11;
             SpendTrend4.Text = "4.";
             // 
             // SpendTrend5
             // 
             SpendTrend5.AutoSize = true;
-            SpendTrend5.Font = new Font("Segoe UI", 12F);
+            SpendTrend5.Font = new Font("Segoe UI", 11F);
             SpendTrend5.ForeColor = SystemColors.Control;
             SpendTrend5.Location = new Point(3, 120);
             SpendTrend5.Name = "SpendTrend5";
-            SpendTrend5.Size = new Size(22, 21);
+            SpendTrend5.Size = new Size(20, 20);
             SpendTrend5.TabIndex = 12;
             SpendTrend5.Text = "5.";
             // 
@@ -781,8 +781,8 @@
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.ColumnCount = 2;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
             tableLayoutPanel2.Controls.Add(BigExpenseValue5, 1, 4);
             tableLayoutPanel2.Controls.Add(BigExpenseValue4, 1, 3);
             tableLayoutPanel2.Controls.Add(BigExpenseValue3, 1, 2);
@@ -807,110 +807,110 @@
             // BigExpenseValue5
             // 
             BigExpenseValue5.AutoSize = true;
-            BigExpenseValue5.Font = new Font("Segoe UI", 12F);
+            BigExpenseValue5.Font = new Font("Segoe UI", 10F);
             BigExpenseValue5.ForeColor = SystemColors.Control;
-            BigExpenseValue5.Location = new Point(159, 120);
+            BigExpenseValue5.Location = new Point(136, 120);
             BigExpenseValue5.Name = "BigExpenseValue5";
-            BigExpenseValue5.Size = new Size(22, 21);
+            BigExpenseValue5.Size = new Size(20, 19);
             BigExpenseValue5.TabIndex = 17;
             BigExpenseValue5.Text = "5.";
             // 
             // BigExpenseValue4
             // 
             BigExpenseValue4.AutoSize = true;
-            BigExpenseValue4.Font = new Font("Segoe UI", 12F);
+            BigExpenseValue4.Font = new Font("Segoe UI", 10F);
             BigExpenseValue4.ForeColor = SystemColors.Control;
-            BigExpenseValue4.Location = new Point(159, 90);
+            BigExpenseValue4.Location = new Point(136, 90);
             BigExpenseValue4.Name = "BigExpenseValue4";
-            BigExpenseValue4.Size = new Size(22, 21);
+            BigExpenseValue4.Size = new Size(20, 19);
             BigExpenseValue4.TabIndex = 16;
             BigExpenseValue4.Text = "4.";
             // 
             // BigExpenseValue3
             // 
             BigExpenseValue3.AutoSize = true;
-            BigExpenseValue3.Font = new Font("Segoe UI", 12F);
+            BigExpenseValue3.Font = new Font("Segoe UI", 10F);
             BigExpenseValue3.ForeColor = SystemColors.Control;
-            BigExpenseValue3.Location = new Point(159, 60);
+            BigExpenseValue3.Location = new Point(136, 60);
             BigExpenseValue3.Name = "BigExpenseValue3";
-            BigExpenseValue3.Size = new Size(22, 21);
+            BigExpenseValue3.Size = new Size(20, 19);
             BigExpenseValue3.TabIndex = 15;
             BigExpenseValue3.Text = "3.";
             // 
             // BigExpenseValue2
             // 
             BigExpenseValue2.AutoSize = true;
-            BigExpenseValue2.Font = new Font("Segoe UI", 12F);
+            BigExpenseValue2.Font = new Font("Segoe UI", 10F);
             BigExpenseValue2.ForeColor = SystemColors.Control;
-            BigExpenseValue2.Location = new Point(159, 30);
+            BigExpenseValue2.Location = new Point(136, 30);
             BigExpenseValue2.Name = "BigExpenseValue2";
-            BigExpenseValue2.Size = new Size(22, 21);
+            BigExpenseValue2.Size = new Size(20, 19);
             BigExpenseValue2.TabIndex = 14;
             BigExpenseValue2.Text = "2.";
             // 
             // BigExpenseValue1
             // 
             BigExpenseValue1.AutoSize = true;
-            BigExpenseValue1.Font = new Font("Segoe UI", 12F);
+            BigExpenseValue1.Font = new Font("Segoe UI", 10F);
             BigExpenseValue1.ForeColor = SystemColors.Control;
-            BigExpenseValue1.Location = new Point(159, 0);
+            BigExpenseValue1.Location = new Point(136, 0);
             BigExpenseValue1.Name = "BigExpenseValue1";
-            BigExpenseValue1.Size = new Size(22, 21);
+            BigExpenseValue1.Size = new Size(20, 19);
             BigExpenseValue1.TabIndex = 13;
             BigExpenseValue1.Text = "1.";
             // 
             // BigExpense1
             // 
             BigExpense1.AutoSize = true;
-            BigExpense1.Font = new Font("Segoe UI", 12F);
+            BigExpense1.Font = new Font("Segoe UI", 11F);
             BigExpense1.ForeColor = SystemColors.Control;
             BigExpense1.Location = new Point(3, 0);
             BigExpense1.Name = "BigExpense1";
-            BigExpense1.Size = new Size(22, 21);
+            BigExpense1.Size = new Size(20, 20);
             BigExpense1.TabIndex = 8;
             BigExpense1.Text = "1.";
             // 
             // BigExpense2
             // 
             BigExpense2.AutoSize = true;
-            BigExpense2.Font = new Font("Segoe UI", 12F);
+            BigExpense2.Font = new Font("Segoe UI", 11F);
             BigExpense2.ForeColor = SystemColors.Control;
             BigExpense2.Location = new Point(3, 30);
             BigExpense2.Name = "BigExpense2";
-            BigExpense2.Size = new Size(22, 21);
+            BigExpense2.Size = new Size(20, 20);
             BigExpense2.TabIndex = 9;
             BigExpense2.Text = "2.";
             // 
             // BigExpense3
             // 
             BigExpense3.AutoSize = true;
-            BigExpense3.Font = new Font("Segoe UI", 12F);
+            BigExpense3.Font = new Font("Segoe UI", 11F);
             BigExpense3.ForeColor = SystemColors.Control;
             BigExpense3.Location = new Point(3, 60);
             BigExpense3.Name = "BigExpense3";
-            BigExpense3.Size = new Size(22, 21);
+            BigExpense3.Size = new Size(20, 20);
             BigExpense3.TabIndex = 10;
             BigExpense3.Text = "3.";
             // 
             // BigExpense4
             // 
             BigExpense4.AutoSize = true;
-            BigExpense4.Font = new Font("Segoe UI", 12F);
+            BigExpense4.Font = new Font("Segoe UI", 11F);
             BigExpense4.ForeColor = SystemColors.Control;
             BigExpense4.Location = new Point(3, 90);
             BigExpense4.Name = "BigExpense4";
-            BigExpense4.Size = new Size(22, 21);
+            BigExpense4.Size = new Size(20, 20);
             BigExpense4.TabIndex = 11;
             BigExpense4.Text = "4.";
             // 
             // BigExpense5
             // 
             BigExpense5.AutoSize = true;
-            BigExpense5.Font = new Font("Segoe UI", 12F);
+            BigExpense5.Font = new Font("Segoe UI", 11F);
             BigExpense5.ForeColor = SystemColors.Control;
             BigExpense5.Location = new Point(3, 120);
             BigExpense5.Name = "BigExpense5";
-            BigExpense5.Size = new Size(22, 21);
+            BigExpense5.Size = new Size(20, 20);
             BigExpense5.TabIndex = 12;
             BigExpense5.Text = "5.";
             // 
