@@ -31,6 +31,7 @@ namespace ExpenseTracker
 
         public void LoadCustom(DateTime from, DateTime to)
         {
+            PurchaseDatabase.ClearCaches();
             var purchases = PurchaseDatabase.GetByDates(from, to);
             PurchasesGrid.Rows.Clear();
             foreach (var purchase in purchases)
