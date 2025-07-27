@@ -962,8 +962,10 @@
             ListSpendingAnomalies.Font = new Font("Segoe UI", 11F);
             ListSpendingAnomalies.ForeColor = SystemColors.Control;
             ListSpendingAnomalies.FormattingEnabled = true;
+            ListSpendingAnomalies.HorizontalScrollbar = true;
             ListSpendingAnomalies.Location = new Point(9, 37);
             ListSpendingAnomalies.Name = "ListSpendingAnomalies";
+            ListSpendingAnomalies.SelectionMode = SelectionMode.None;
             ListSpendingAnomalies.Size = new Size(475, 184);
             ListSpendingAnomalies.TabIndex = 3;
             // 

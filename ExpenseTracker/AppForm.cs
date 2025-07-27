@@ -1,4 +1,5 @@
 using ExpenseTracker.UserControls;
+using System.ComponentModel;
 
 namespace ExpenseTracker
 {
@@ -77,6 +78,14 @@ namespace ExpenseTracker
 
             LoadContent(castedControl, false);
             onLoad?.Invoke(castedControl);
+        }
+
+        public T GetInstance<T>(Views view) where T : UserControl, IUserControl
+        {
+            var control = _views[view];
+            if (control is not T castedControl)
+                return default;
+            return castedControl;
         }
     }
 

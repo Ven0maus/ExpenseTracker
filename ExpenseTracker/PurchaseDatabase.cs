@@ -70,7 +70,7 @@ namespace ExpenseTracker
 
             var purchaseCmd = connection.CreateCommand();
             purchaseCmd.CommandText = @"
-        INSERT INTO Purchases (Shop, Date, Price)
+        INSERT INTO Purchases (Shop, Date, Price, Category)
         VALUES ($shop, $date, $price, $category)";
             purchaseCmd.Parameters.AddWithValue("$shop", purchase.Shop);
             purchaseCmd.Parameters.AddWithValue("$date", purchase.Date.ToUnixTimestamp());
@@ -226,6 +226,27 @@ namespace ExpenseTracker
 
             var value = cmd.ExecuteScalar();
             return (double)(value is DBNull ? 0d : value);
+        }
+
+        public static double GetExpensesByDates(DateTime start, DateTime end)
+        {
+            if (!IsInitialized)
+                throw new Exception("You must initialize the database first.");
+
+            using var connection = new SqliteConnection($"Data Source={_dbPath}");
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = @"
+        SELECT SUM(Price)
+        FROM Purchases
+        WHERE Date BETWEEN $start AND $end";
+
+            cmd.Parameters.AddWithValue("$start", start.ToUnixTimestamp());
+            cmd.Parameters.AddWithValue("$end", end.ToUnixTimestamp());
+
+            var value = cmd.ExecuteScalar();
+            return value is DBNull or null ? 0d : Convert.ToDouble(value);
         }
 
         private static readonly Dictionary<(long, long), Purchase[]> _purchaseDataByDateCache = [];

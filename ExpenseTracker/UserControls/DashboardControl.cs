@@ -28,9 +28,23 @@ namespace ExpenseTracker
         {
             NrTotalSpend.Text = PurchaseDatabase.GetAllTimeExpenses().ToEuroFormat();
 
-            // TODO: Budgeting
-            NrMonthlyBudget.Text = 0.ToEuroFormat();
-            NrBudgetLeft.Text = 0.ToEuroFormat();
+            var settingsControl = AppForm.Instance.GetInstance<SettingsControl>(Views.Settings);
+            var monthlyBudget = settingsControl.Settings.MonthlyBudget;
+            var (start, end) = DateTime.Now.GetMonthRange();
+            var spendThisMonth = (decimal)PurchaseDatabase.GetExpensesByDates(start, end);
+            var budgetLeft = (monthlyBudget - spendThisMonth);
+            var twentyPercentOfMonthlyBudget = Math.Round(monthlyBudget * 0.2m, 2);
+
+            NrMonthlyBudget.Text = monthlyBudget.ToEuroFormat();
+            NrBudgetLeft.Text = budgetLeft.ToEuroFormat();
+
+            // Define color of budget
+            if (budgetLeft >= twentyPercentOfMonthlyBudget)
+                NrBudgetLeft.ForeColor = Color.ForestGreen;
+            else if (budgetLeft > 0)
+                NrBudgetLeft.ForeColor = Color.Orange;
+            else
+                NrBudgetLeft.ForeColor = Color.Red;
         }
 
         private void CalculatePeriod(PeriodType period)
@@ -411,55 +425,10 @@ namespace ExpenseTracker
 
         private void CalculateSpendingAnomalies()
         {
-            /* TODO:
-             *  Comparative Anomalies
-
-            "You spent X% more this week than last week."
-
-            "Your daily average this month is Y% above your usual daily average."
-
-            "You've already spent Z% of your monthly budget, and the month is only X% complete."
-
-            "This month’s spending is your highest since [Month/Year]."
-
-            "You spent less this week than any week in the last 6 months."
-
-            📈 Trend-Based Insights
-
-            "Your spending has increased for 3 consecutive weeks."
-
-            "You've spent more every Monday than any other weekday for the past 4 weeks."
-
-            "There’s a 50% increase in your weekend spending compared to weekdays."
-
-            "Average daily spending this month is trending 15% higher than the previous 3-month average."
-
-            "This is the 3rd time in a row your monthly spending increased."
-
-            🛒 Category-Specific Anomalies (if you use categories)
-
-            "You spent 3× more on Dining & Coffee this week than your usual weekly average."
-
-            "Groceries made up 60% of your spending this month — highest ever."
-
-            "No purchases were made in the Entertainment category this month — unusual!"
-
-            "Your most expensive category this month is [X], which is different from your usual [Y]."
-
-            💡 Behavior-Based Facts
-
-            "Your most expensive purchase this week was at [Shop], costing [X €]."
-
-            "You made 80% of your purchases at 3 shops: [A], [B], [C]."
-
-            "You spent something every day for the last 10 days — streak!"
-
-            "You didn’t spend anything for 3 days straight last week — rare!"
-
-            "Most of your purchases happen on [Day of Week] — pattern spotted."
-
-            "Your average purchase size increased by 20% this month."
-            */
+            ListSpendingAnomalies.Items.Clear();
+            var insights = InsightGenerators.GetInsights();
+            foreach (var insight in insights)
+                ListSpendingAnomalies.Items.Add(insight.Message);
         }
 
         private static (DateTime start, DateTime end) GetPeriodDateRange(DateTime referenceDate, PeriodType period)
