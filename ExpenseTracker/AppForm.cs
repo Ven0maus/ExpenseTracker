@@ -9,6 +9,8 @@ namespace ExpenseTracker
 
         private readonly Dictionary<Views, UserControl> _views = [];
 
+        private IUserControl _currentOpenControl;
+
         public AppForm()
         {
             Instance = this;
@@ -36,21 +38,25 @@ namespace ExpenseTracker
 
         private void BtnDashboard_Click(object sender, EventArgs e)
         {
+            if (_currentOpenControl is DashboardControl) return;
             LoadContent(_views[Views.Dashboard]);
         }
 
         private void BtnCalendar_Click(object sender, EventArgs e)
         {
+            if (_currentOpenControl is CalendarControl) return;
             LoadContent(_views[Views.Calendar]);
         }
 
         private void BtnPurchases_Click(object sender, EventArgs e)
         {
+            if (_currentOpenControl is PurchasesControl) return;
             LoadContent(_views[Views.Purchases]);
         }
 
         private void BtnSettings_Click(object sender, EventArgs e)
         {
+            if (_currentOpenControl is SettingsControl) return;
             LoadContent(_views[Views.Settings]);
         }
 
@@ -60,13 +66,11 @@ namespace ExpenseTracker
             control.Dock = DockStyle.Fill;
             control.Font = (Font)control.Font.Clone();
             ContentPanel.Controls.Add(control);
+            _currentOpenControl = control as IUserControl;
 
             // Execute interface methods
             if (executeOnLoad)
-            {
-                var controlInterface = control as IUserControl;
-                controlInterface?.OnLoad();
-            }
+                _currentOpenControl?.OnLoad();
         }
 
         public void LoadContentCustom<T>(Views view, Action<T> onLoad)

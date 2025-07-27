@@ -14,41 +14,174 @@ namespace ExpenseTracker
             // Make sure we return new data, not cached data.
             PurchaseDatabase.ClearCaches();
 
-            // TODO: Off-thread calculations and marshall UI changes on UI thread
-            CalculateBudget();
-            CalculatePeriod(PeriodType.Weekly);
-            CalculatePeriod(PeriodType.Monthly);
-            CalculatePeriod(PeriodType.Yearly);
-            CalculateAverages();
-            CalculateCategorySummary();
-            CalculateBiggestExpenses();
-            CalculateSpendingAnomalies();
+            // Run the calculations on a background thread
+            Task.Run(() =>
+            {
+                // Perform all calculations here, but **do NOT update UI controls here**.
+                // Instead, collect all results into a container object.
+                var results = new CalculationResults
+                {
+                    BudgetData = CalculateBudget(),
+                    WeeklyData = CalculatePeriod(PeriodType.Weekly),
+                    MonthlyData = CalculatePeriod(PeriodType.Monthly),
+                    YearlyData = CalculatePeriod(PeriodType.Yearly),
+                    AveragesData = CalculateAverages(),
+                    CategorySummaryData = CalculateCategorySummary(),
+                    BiggestExpensesData = CalculateBiggestExpenses(),
+                    SpendingAnomaliesData = CalculateSpendingAnomalies()
+                };
+
+                // Clear Cache as to not retain old information in cache for no reason
+                PurchaseDatabase.ClearCaches();
+
+                // Marshall data to the UI thread
+                Invoke(() =>
+                {
+                    SetUIData(results);
+                });
+            });
         }
 
-        private void CalculateBudget()
+        private void SetUIData(CalculationResults calcResults)
         {
-            NrTotalSpend.Text = PurchaseDatabase.GetAllTimeExpenses().ToEuroFormat();
+            /* Budget Data */
+            NrTotalSpend.Text = calcResults.BudgetData.TotalSpend.ToEuroFormat();
+            NrMonthlyBudget.Text = calcResults.BudgetData.MonthlyBudget.ToEuroFormat();
+            NrBudgetLeft.Text = calcResults.BudgetData.BudgetLeft.ToEuroFormat();
 
+            var twentyPercentOfMonthlyBudget = Math.Round(calcResults.BudgetData.MonthlyBudget * 0.2m, 2);
+            if (calcResults.BudgetData.BudgetLeft >= twentyPercentOfMonthlyBudget)
+                NrBudgetLeft.ForeColor = Color.ForestGreen;
+            else if (calcResults.BudgetData.BudgetLeft > 0)
+                NrBudgetLeft.ForeColor = Color.Orange;
+            else
+                NrBudgetLeft.ForeColor = Color.Red;
+
+            /* Weekly Data */
+            NrThisWeekTotal.Text = calcResults.WeeklyData.ThisPeriodTotal.ToEuroFormat();
+            NrLastWeeKTotal.Text = calcResults.WeeklyData.LastPeriodTotal.ToEuroFormat();
+            NrThisWeekPrediction.Text = Math.Round(calcResults.WeeklyData.Prediction, 0).ToEuroFormat();
+            NrComparedToLastWeek.Text = Math.Round(calcResults.WeeklyData.PercentChange, 1).ToPercentageFormat();
+            if (calcResults.WeeklyData.PercentChange <= 0)
+                NrComparedToLastWeek.ForeColor = Color.ForestGreen;
+            else
+                NrComparedToLastWeek.ForeColor = Color.Red;
+
+            /* Monthly Data */
+            NrThisMonthTotal.Text = calcResults.MonthlyData.ThisPeriodTotal.ToEuroFormat();
+            NrLastMonthTotal.Text = calcResults.MonthlyData.LastPeriodTotal.ToEuroFormat();
+            NrThisMonthPrediction.Text = Math.Round(calcResults.MonthlyData.Prediction, 0).ToEuroFormat();
+            NrComparedToLastMonth.Text = Math.Round(calcResults.MonthlyData.PercentChange, 1).ToPercentageFormat();
+            if (calcResults.MonthlyData.PercentChange <= 0)
+                NrComparedToLastMonth.ForeColor = Color.ForestGreen;
+            else
+                NrComparedToLastMonth.ForeColor = Color.Red;
+
+            /* Yearly Data */
+            NrThisYearTotal.Text = calcResults.YearlyData.ThisPeriodTotal.ToEuroFormat();
+            NrLastYearTotal.Text = calcResults.YearlyData.LastPeriodTotal.ToEuroFormat();
+            NrThisYearPrediction.Text = Math.Round(calcResults.YearlyData.Prediction, 0).ToEuroFormat();
+            NrComparedToLastYear.Text = Math.Round(calcResults.YearlyData.PercentChange, 1).ToPercentageFormat();
+            if (calcResults.YearlyData.PercentChange <= 0)
+                NrComparedToLastYear.ForeColor = Color.ForestGreen;
+            else
+                NrComparedToLastYear.ForeColor = Color.Red;
+
+            /* Averages Data */
+            NrAvgDailySpend.Text = calcResults.AveragesData.AvgDaily.ToEuroFormat();
+            NrAvgWeeklySpend.Text = calcResults.AveragesData.AvgWeekly.ToEuroFormat();
+            NrAvgMonthlySpend.Text = calcResults.AveragesData.AvgMonthly.ToEuroFormat();
+            NrAvgYearlySpend.Text = calcResults.AveragesData.AvgYearly.ToEuroFormat();
+
+            /* Category Summary Data */
+            var labels = new Dictionary<int, Label>
+            {
+                {0, SpendTrend1},
+                {1, SpendTrend2},
+                {2, SpendTrend3},
+                {3, SpendTrend4},
+                {4, SpendTrend5},
+            };
+            var values = new Dictionary<int, Label>
+            {
+                {0, SpendTrendValue1},
+                {1, SpendTrendValue2},
+                {2, SpendTrendValue3},
+                {3, SpendTrendValue4},
+                {4, SpendTrendValue5},
+            };
+
+            for (int i = 0; i < calcResults.CategorySummaryData.TopCategories.Length; i++)
+            {
+                var item = calcResults.CategorySummaryData.TopCategories[i];
+                labels[i].Text = $"{i + 1}. {item.Category}";
+                values[i].Text = item.Total.ToEuroFormat();
+            }
+
+            // Clear unused rows
+            for (int i = 4; i >= calcResults.CategorySummaryData.TopCategories.Length; i--)
+            {
+                labels[i].Text = string.Empty;
+                values[i].Text = string.Empty;
+            }
+
+            /* Biggest Expenses Data */
+            var expenseLabels = new Dictionary<int, Label>
+            {
+                {0, BigExpense1 },
+                {1, BigExpense2 },
+                {2, BigExpense3 },
+                {3, BigExpense4 },
+                {4, BigExpense5 },
+            };
+
+            var expenseValues = new Dictionary<int, Label>
+            {
+                {0, BigExpenseValue1 },
+                {1, BigExpenseValue2 },
+                {2, BigExpenseValue3 },
+                {3, BigExpenseValue4 },
+                {4, BigExpenseValue5 },
+            };
+
+            for (int i = 0; i < calcResults.BiggestExpensesData.TopExpenses.Length; i++)
+            {
+                var item = calcResults.BiggestExpensesData.TopExpenses[i];
+                expenseLabels[i].Text = $"{i + 1}. {item.Shop}";
+                expenseValues[i].Text = item.Total.ToEuroFormat();
+            }
+
+            // Clear unused rows
+            for (int i = 4; i >= calcResults.BiggestExpensesData.TopExpenses.Length; i--)
+            {
+                expenseLabels[i].Text = string.Empty;
+                expenseValues[i].Text = string.Empty;
+            }
+
+            /* Spending Anomalies Data */
+            ListSpendingAnomalies.Items.Clear();
+            foreach (var insight in calcResults.SpendingAnomaliesData)
+                ListSpendingAnomalies.Items.Add(insight.Message);
+        }
+
+        private static BudgetData CalculateBudget()
+        {
+            var totalSpend = PurchaseDatabase.GetAllTimeExpenses();
             var settingsControl = AppForm.Instance.GetInstance<SettingsControl>(Views.Settings);
             var monthlyBudget = settingsControl.Settings.MonthlyBudget;
             var (start, end) = DateTime.Now.GetMonthRange();
             var spendThisMonth = (decimal)PurchaseDatabase.GetExpensesByDates(start, end);
-            var budgetLeft = (monthlyBudget - spendThisMonth);
-            var twentyPercentOfMonthlyBudget = Math.Round(monthlyBudget * 0.2m, 2);
+            var budgetLeft = monthlyBudget - spendThisMonth;
 
-            NrMonthlyBudget.Text = monthlyBudget.ToEuroFormat();
-            NrBudgetLeft.Text = budgetLeft.ToEuroFormat();
-
-            // Define color of budget
-            if (budgetLeft >= twentyPercentOfMonthlyBudget)
-                NrBudgetLeft.ForeColor = Color.ForestGreen;
-            else if (budgetLeft > 0)
-                NrBudgetLeft.ForeColor = Color.Orange;
-            else
-                NrBudgetLeft.ForeColor = Color.Red;
+            return new BudgetData
+            {
+                MonthlyBudget = monthlyBudget,
+                BudgetLeft = budgetLeft,
+                TotalSpend = (decimal)totalSpend
+            };
         }
 
-        private void CalculatePeriod(PeriodType period)
+        private static PeriodData CalculatePeriod(PeriodType period)
         {
             var today = DateTime.Today;
 
@@ -170,113 +303,16 @@ namespace ExpenseTracker
             else
                 percentChange = (thisPeriodTotal == 0) ? 0 : 100;
 
-            // Assign to UI controls based on period
-            switch (period)
+            return new PeriodData
             {
-                case PeriodType.Weekly:
-                    NrThisWeekTotal.Text = thisPeriodTotal.ToEuroFormat();
-                    NrLastWeeKTotal.Text = lastPeriodTotal.ToEuroFormat();
-                    NrThisWeekPrediction.Text = Math.Round(prediction, 0).ToEuroFormat();
-                    NrComparedToLastWeek.Text = Math.Round(percentChange, 1).ToPercentageFormat();
-                    if (percentChange <= 0)
-                        NrComparedToLastWeek.ForeColor = Color.ForestGreen;
-                    else
-                        NrComparedToLastWeek.ForeColor = Color.Red;
-                    break;
-
-                case PeriodType.Monthly:
-                    NrThisMonthTotal.Text = thisPeriodTotal.ToEuroFormat();
-                    NrLastMonthTotal.Text = lastPeriodTotal.ToEuroFormat();
-                    NrThisMonthPrediction.Text = Math.Round(prediction, 0).ToEuroFormat();
-                    NrComparedToLastMonth.Text = Math.Round(percentChange, 1).ToPercentageFormat();
-                    if (percentChange <= 0)
-                        NrComparedToLastMonth.ForeColor = Color.ForestGreen;
-                    else
-                        NrComparedToLastMonth.ForeColor = Color.Red;
-                    break;
-
-                case PeriodType.Yearly:
-                    NrThisYearTotal.Text = thisPeriodTotal.ToEuroFormat();
-                    NrLastYearTotal.Text = lastPeriodTotal.ToEuroFormat();
-                    NrThisYearPrediction.Text = Math.Round(prediction, 0).ToEuroFormat();
-                    NrComparedToLastYear.Text = Math.Round(percentChange, 1).ToPercentageFormat();
-                    if (percentChange <= 0)
-                        NrComparedToLastYear.ForeColor = Color.ForestGreen;
-                    else
-                        NrComparedToLastYear.ForeColor = Color.Red;
-                    break;
-            }
+                ThisPeriodTotal = thisPeriodTotal,
+                LastPeriodTotal = lastPeriodTotal,
+                Prediction = prediction,
+                PercentChange = percentChange
+            };
         }
 
-        /* // ORIGINAL IMPLEMENTATION (Before generalize into CalculatePeriod)
-        private void CalculateWeek()
-        {
-            // Today
-            var today = DateTime.Today;
-
-            // Get the current day of the week (0 = Sunday, 1 = Monday, ...)
-            var dayOfWeek = (int)today.DayOfWeek;
-
-            // Calculate how many days to subtract to get back to Monday
-            int daysSinceMonday = (dayOfWeek == 0) ? 6 : dayOfWeek - 1;
-
-            // Start of the week (Monday)
-            var thisWeekStart = today.AddDays(-daysSinceMonday);
-
-            // End of the week (Sunday)
-            var thisWeekEnd = thisWeekStart.AddDays(6);
-
-            // Now fetch purchases between Monday and Sunday
-            var purchasesThisWeek = PurchaseDatabase.GetByDates(thisWeekStart, thisWeekEnd);
-
-            var lastWeekStart = thisWeekStart.AddDays(-7);
-            var lastWeekEnd = thisWeekStart.AddDays(-1);
-
-            // Fetch purchases from last week
-            var purchasesLastWeek = PurchaseDatabase.GetByDates(lastWeekStart, lastWeekEnd);
-
-            var thisWeekTotal = purchasesThisWeek.Sum(a => a.Price);
-            var lastWeekTotal = purchasesLastWeek.Sum(a => a.Price);
-
-            NrThisWeekTotal.Text = thisWeekTotal.ToEuroFormat();
-            NrLastWeeKTotal.Text = lastWeekTotal.ToEuroFormat();
-
-            // Prediction based on daily spending and last two weeks average
-            var weekBeforeLastWeekStart = lastWeekStart.AddDays(-7);
-            var weekBeforeLastWeekEnd = lastWeekStart.AddDays(-1);
-            var purchasesWeekBeforeLastWeek = PurchaseDatabase.GetByDates(lastWeekStart, lastWeekEnd);
-            var weekBeforeLastWeekTotal = purchasesWeekBeforeLastWeek.Sum(a => a.Price);
-
-            // --- 1. Historical average over last 2 weeks
-            decimal historicalAvg = (lastWeekTotal + weekBeforeLastWeekTotal) / 2.0m;
-
-            // --- 2. Current week's daily average (based on days so far)
-            decimal currentTotal = thisWeekTotal;
-            int daysSoFar = daysSinceMonday + 1;
-            decimal dailyAvgSoFar = (daysSoFar > 0) ? currentTotal / daysSoFar : 0;
-            decimal liveForecast = dailyAvgSoFar * 7; // Full week estimate
-
-            // --- 3. Combine both (weighted)
-            decimal prediction = (historicalAvg * 0.6m) + (liveForecast * 0.4m); // adjust weights if needed
-            NrThisWeekPrediction.Text = Math.Round(prediction, 0).ToEuroFormat();
-
-            // Percentage based on last week
-            decimal percentChange = 0;
-            if (lastWeekTotal != 0)
-            {
-                percentChange = ((thisWeekTotal - lastWeekTotal) / lastWeekTotal) * 100.0m;
-            }
-            else
-            {
-                // Optional: if lastWeekTotal was 0, avoid divide-by-zero
-                percentChange = (thisWeekTotal == 0) ? 0 : 100;
-            }
-
-            NrComparedToLastWeek.Text = Math.Round(percentChange, 1).ToEuroFormat();
-        }
-        */
-
-        private void CalculateAverages()
+        private static AveragesData CalculateAverages()
         {
             var today = DateTime.Today;
             var earliestDate = PurchaseDatabase.GetEarliestPurchaseDate();
@@ -297,7 +333,6 @@ namespace ExpenseTracker
             var allDaily = PurchaseDatabase.GetByDates(dailyStart, today);
             var totalDays = (today - dailyStart).Days + 1;
             decimal avgDaily = totalDays > 0 ? allDaily.Sum(p => p.Price) / totalDays : 0;
-            NrAvgDailySpend.Text = Math.Round(avgDaily, 2).ToEuroFormat();
 
             // --- Weekly average (weeks with 3+ distinct days)
             decimal totalWeekly = 0;
@@ -323,7 +358,6 @@ namespace ExpenseTracker
             }
 
             decimal avgWeekly = validWeeks > 0 ? totalWeekly / validWeeks : 0;
-            NrAvgWeeklySpend.Text = Math.Round(avgWeekly, 2).ToEuroFormat();
 
             // --- Monthly average (months with 5+ purchases)
             decimal totalMonthly = 0;
@@ -348,7 +382,6 @@ namespace ExpenseTracker
             }
 
             decimal avgMonthly = validMonths > 0 ? totalMonthly / validMonths : 0;
-            NrAvgMonthlySpend.Text = Math.Round(avgMonthly, 2).ToEuroFormat();
 
             // --- Yearly average (years with 20+ purchases)
             decimal totalYearly = 0;
@@ -373,69 +406,39 @@ namespace ExpenseTracker
             }
 
             decimal avgYearly = validYears > 0 ? totalYearly / validYears : 0;
-            NrAvgYearlySpend.Text = Math.Round(avgYearly, 2).ToEuroFormat();
+
+            return new AveragesData
+            {
+                AvgDaily = Math.Round(avgDaily, 2),
+                AvgWeekly = Math.Round(avgWeekly, 2),
+                AvgMonthly = Math.Round(avgMonthly, 2),
+                AvgYearly = Math.Round(avgYearly, 2)
+            };
         }
 
-        private void CalculateCategorySummary()
+        private static CategorySummaryData CalculateCategorySummary()
         {
             var (start, end) = GetPeriodDateRange(DateTime.Now, PeriodType.Monthly);
             var purchases = PurchaseDatabase.GetByDates(start, end);
 
-            // Group by category and sum totals
-            var categories = purchases
+            var topCategories = purchases
                 .GroupBy(p => p.Category, StringComparer.OrdinalIgnoreCase)
-                .Select(g => new
+                .Select(g => new CategorySummaryData.CategorySummaryItem
                 {
                     Category = g.Key,
                     Total = g.Sum(p => p.Price)
                 })
-                .OrderByDescending(g => g.Total)
-                .Take(5) // Top 5 categories
-                .ToList();
+                .OrderByDescending(item => item.Total)
+                .Take(5)
+                .ToArray();
 
-            var expenseLabels = new Dictionary<int, Label>
+            return new CategorySummaryData
             {
-                {0, SpendTrend1 },
-                {1, SpendTrend2 },
-                {2, SpendTrend3 },
-                {3, SpendTrend4 },
-                {4, SpendTrend5 },
+                TopCategories = topCategories
             };
-
-            var expenseValues = new Dictionary<int, Label>
-            {
-                {0, SpendTrendValue1 },
-                {1, SpendTrendValue2 },
-                {2, SpendTrendValue3 },
-                {3, SpendTrendValue4 },
-                {4, SpendTrendValue5 },
-            };
-
-            for (int i = 0; i < categories.Count; i++)
-            {
-                var purchase = categories[i];
-                var label = expenseLabels[i];
-                var value = expenseValues[i];
-
-                label.Text = $"{i + 1}. {purchase.Category}";
-                value.Text = purchase.Total.ToEuroFormat();
-            }
-
-            // Clear out others
-            if (categories.Count != 5)
-            {
-                var leftOver = categories.Count;
-                for (int i = 4; i >= leftOver; i--)
-                {
-                    var label = expenseLabels[i];
-                    var value = expenseValues[i];
-                    label.Text = string.Empty;
-                    value.Text = string.Empty;
-                }
-            }
         }
 
-        private void CalculateBiggestExpenses()
+        private static BiggestExpensesData CalculateBiggestExpenses()
         {
             var (start, end) = GetPeriodDateRange(DateTime.Now, PeriodType.Monthly);
             var purchases = PurchaseDatabase.GetByDates(start, end);
@@ -443,63 +446,24 @@ namespace ExpenseTracker
             // Group by shop and sum totals
             var biggestExpenses = purchases
                 .GroupBy(p => p.Shop, StringComparer.OrdinalIgnoreCase)
-                .Select(g => new
+                .Select(g => new BiggestExpensesData.BigExpenseItem()
                 {
                     Shop = g.Key,
                     Total = g.Sum(p => p.Price)
                 })
                 .OrderByDescending(g => g.Total)
-                .Take(5) // Top 5 biggest expenses
-                .ToList();
+                .Take(5)
+                .ToArray();
 
-            var expenseLabels = new Dictionary<int, Label>
+            return new BiggestExpensesData
             {
-                {0, BigExpense1 },
-                {1, BigExpense2 },
-                {2, BigExpense3 },
-                {3, BigExpense4 },
-                {4, BigExpense5 },
+                TopExpenses = biggestExpenses
             };
-
-            var expenseValues = new Dictionary<int, Label>
-            {
-                {0, BigExpenseValue1 },
-                {1, BigExpenseValue2 },
-                {2, BigExpenseValue3 },
-                {3, BigExpenseValue4 },
-                {4, BigExpenseValue5 },
-            };
-
-            for (int i = 0; i < biggestExpenses.Count; i++)
-            {
-                var purchase = biggestExpenses[i];
-                var label = expenseLabels[i];
-                var value = expenseValues[i];
-
-                label.Text = $"{i + 1}. {purchase.Shop}";
-                value.Text = purchase.Total.ToEuroFormat();
-            }
-
-            // Clear out others
-            if (biggestExpenses.Count != 5)
-            {
-                var leftOver = biggestExpenses.Count;
-                for (int i = 4; i >= leftOver; i--)
-                {
-                    var label = expenseLabels[i];
-                    var value = expenseValues[i];
-                    label.Text = string.Empty;
-                    value.Text = string.Empty;
-                }
-            }
         }
 
-        private void CalculateSpendingAnomalies()
+        private static SpendingInsight[] CalculateSpendingAnomalies()
         {
-            ListSpendingAnomalies.Items.Clear();
-            var insights = InsightGenerators.GetInsights();
-            foreach (var insight in insights)
-                ListSpendingAnomalies.Items.Add(insight.Message);
+            return InsightGenerators.GetInsights();
         }
 
         private static (DateTime start, DateTime end) GetPeriodDateRange(DateTime referenceDate, PeriodType period)
