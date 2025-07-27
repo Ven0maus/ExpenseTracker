@@ -23,11 +23,7 @@ namespace ExpenseTracker
             DatePicker.Enabled = true;
             LblTitle.Text = "Purchases | Today";
             BtnShowToday.Visible = false;
-            BtnAdd.Enabled = true;
-            TxtShopName.Text = string.Empty;
-            TxtShopName.Enabled = true;
-            NrAmount.Text = string.Empty;
-            NrAmount.Enabled = true;
+            CmbCategory.SelectedIndex = 0;
 
             SetTotal();
         }
@@ -47,11 +43,6 @@ namespace ExpenseTracker
                 DatePicker.Enabled = false;
                 LblTitle.Text = $"Purchases | {from.Date.ToString("d")} - {to.Date.ToString("d")}";
                 BtnShowToday.Visible = true;
-                BtnAdd.Enabled = false;
-                TxtShopName.Text = string.Empty;
-                TxtShopName.Enabled = false;
-                NrAmount.Text = string.Empty;
-                NrAmount.Enabled = false;
             }
             else
             {
@@ -62,31 +53,16 @@ namespace ExpenseTracker
                 {
                     LblTitle.Text = "Purchases | Yesterday";
                     BtnShowToday.Visible = true;
-                    BtnAdd.Enabled = false;
-                    TxtShopName.Text = string.Empty;
-                    TxtShopName.Enabled = false;
-                    NrAmount.Text = string.Empty;
-                    NrAmount.Enabled = false;
                 }
                 else if (from.Date == DateTime.Today.Date)
                 {
                     LblTitle.Text = "Purchases | Today";
                     BtnShowToday.Visible = false;
-                    BtnAdd.Enabled = true;
-                    TxtShopName.Text = string.Empty;
-                    TxtShopName.Enabled = true;
-                    NrAmount.Text = string.Empty;
-                    NrAmount.Enabled = true;
                 }
                 else
                 {
                     LblTitle.Text = $"Purchases | {from.Date.ToString("d")}";
                     BtnShowToday.Visible = true;
-                    BtnAdd.Enabled = false;
-                    TxtShopName.Text = string.Empty;
-                    TxtShopName.Enabled = false;
-                    NrAmount.Text = string.Empty;
-                    NrAmount.Enabled = false;
                 }
             }
 
@@ -101,6 +77,7 @@ namespace ExpenseTracker
                 purchase.Shop = TxtShopName.Text;
                 purchase.Price = price;
                 purchase.Date = DatePicker.Value;
+                purchase.Category = CmbCategory.SelectedItem.ToString();
 
                 PurchaseDatabase.Create(purchase);
                 PurchasesGrid.Rows.Add(purchase.Id, purchase.Shop, purchase.Price.ToString(CultureInfo.InvariantCulture));
@@ -144,6 +121,11 @@ namespace ExpenseTracker
         private void BtnShowToday_Click(object sender, EventArgs e)
         {
             OnLoad();
+        }
+
+        private void DatePicker_ValueChanged(object sender, EventArgs e)
+        {
+            LoadCustom(DatePicker.Value, DatePicker.Value);
         }
     }
 }

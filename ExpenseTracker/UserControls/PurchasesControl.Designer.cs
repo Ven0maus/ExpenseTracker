@@ -44,12 +44,14 @@
             LblTitle = new Label();
             BtnDelete = new Button();
             BtnShowToday = new Button();
+            label1 = new Label();
+            CmbCategory = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)PurchasesGrid).BeginInit();
             SuspendLayout();
             // 
             // BtnAdd
             // 
-            BtnAdd.Location = new Point(692, 176);
+            BtnAdd.Location = new Point(692, 220);
             BtnAdd.Name = "BtnAdd";
             BtnAdd.Size = new Size(91, 47);
             BtnAdd.TabIndex = 4;
@@ -59,7 +61,7 @@
             // 
             // NrAmount
             // 
-            NrAmount.Location = new Point(533, 200);
+            NrAmount.Location = new Point(533, 244);
             NrAmount.Name = "NrAmount";
             NrAmount.Size = new Size(153, 23);
             NrAmount.TabIndex = 2;
@@ -69,7 +71,7 @@
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F);
             label2.ForeColor = Color.White;
-            label2.Location = new Point(533, 176);
+            label2.Location = new Point(533, 220);
             label2.Name = "label2";
             label2.Size = new Size(69, 21);
             label2.TabIndex = 4;
@@ -92,10 +94,11 @@
             DatePicker.Name = "DatePicker";
             DatePicker.Size = new Size(250, 23);
             DatePicker.TabIndex = 0;
+            DatePicker.ValueChanged += DatePicker_ValueChanged;
             // 
             // TxtShopName
             // 
-            TxtShopName.Location = new Point(533, 139);
+            TxtShopName.Location = new Point(533, 190);
             TxtShopName.Name = "TxtShopName";
             TxtShopName.Size = new Size(250, 23);
             TxtShopName.TabIndex = 1;
@@ -105,7 +108,7 @@
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 12F);
             label4.ForeColor = Color.White;
-            label4.Location = new Point(533, 115);
+            label4.Location = new Point(533, 166);
             label4.Name = "label4";
             label4.Size = new Size(95, 21);
             label4.TabIndex = 7;
@@ -185,7 +188,7 @@
             // BtnDelete
             // 
             BtnDelete.Enabled = false;
-            BtnDelete.Location = new Point(533, 235);
+            BtnDelete.Location = new Point(533, 279);
             BtnDelete.Name = "BtnDelete";
             BtnDelete.Size = new Size(250, 30);
             BtnDelete.TabIndex = 5;
@@ -205,11 +208,34 @@
             BtnShowToday.Visible = false;
             BtnShowToday.Click += BtnShowToday_Click;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 12F);
+            label1.ForeColor = Color.White;
+            label1.Location = new Point(533, 113);
+            label1.Name = "label1";
+            label1.Size = new Size(76, 21);
+            label1.TabIndex = 16;
+            label1.Text = "Category:";
+            // 
+            // CmbCategory
+            // 
+            CmbCategory.DropDownStyle = ComboBoxStyle.DropDownList;
+            CmbCategory.FormattingEnabled = true;
+            CmbCategory.Items.AddRange(new object[] { "Groceries", "Clothing & Goods", "Entertainment", "Subscriptions", "Others" });
+            CmbCategory.Location = new Point(533, 140);
+            CmbCategory.Name = "CmbCategory";
+            CmbCategory.Size = new Size(250, 23);
+            CmbCategory.TabIndex = 17;
+            // 
             // PurchasesControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(34, 41, 64);
+            Controls.Add(CmbCategory);
+            Controls.Add(label1);
             Controls.Add(BtnShowToday);
             Controls.Add(BtnDelete);
             Controls.Add(LblTitle);
@@ -248,5 +274,7 @@
         private DataGridViewTextBoxColumn IdCol;
         private DataGridViewTextBoxColumn ShopCol;
         private DataGridViewTextBoxColumn AmountCol;
+        private Label label1;
+        private ComboBox CmbCategory;
     }
 }

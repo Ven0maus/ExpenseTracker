@@ -144,7 +144,7 @@
             ContentPanel.Dock = DockStyle.Fill;
             ContentPanel.Location = new Point(167, 0);
             ContentPanel.Name = "ContentPanel";
-            ContentPanel.Size = new Size(839, 642);
+            ContentPanel.Size = new Size(794, 642);
             ContentPanel.TabIndex = 1;
             // 
             // AppForm
@@ -152,7 +152,7 @@
             AutoScaleDimensions = new SizeF(8F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(34, 41, 64);
-            ClientSize = new Size(1006, 642);
+            ClientSize = new Size(961, 642);
             Controls.Add(ContentPanel);
             Controls.Add(panel1);
             Font = new Font("Segoe Print", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);

@@ -14,6 +14,9 @@ namespace ExpenseTracker
             InitializeComponent();
             InitDatabase();
             InitViews();
+
+            // Base view
+            LoadContent(_views[Views.Dashboard]);
         }
 
         private static void InitDatabase()

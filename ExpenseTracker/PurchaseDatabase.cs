@@ -24,7 +24,8 @@ namespace ExpenseTracker
         Id INTEGER PRIMARY KEY AUTOINCREMENT,
         Shop TEXT,
         Date INTEGER,
-        Price REAL
+        Price REAL,
+        Category TEXT
     );";
             tableCmd.ExecuteNonQuery();
         }
@@ -70,10 +71,11 @@ namespace ExpenseTracker
             var purchaseCmd = connection.CreateCommand();
             purchaseCmd.CommandText = @"
         INSERT INTO Purchases (Shop, Date, Price)
-        VALUES ($shop, $date, $price)";
+        VALUES ($shop, $date, $price, $category)";
             purchaseCmd.Parameters.AddWithValue("$shop", purchase.Shop);
             purchaseCmd.Parameters.AddWithValue("$date", purchase.Date.ToUnixTimestamp());
             purchaseCmd.Parameters.AddWithValue("$price", purchase.Price);
+            purchaseCmd.Parameters.AddWithValue("$category", purchase.Category);
             purchaseCmd.ExecuteNonQuery();
 
             // Get the last inserted row ID
@@ -100,13 +102,15 @@ namespace ExpenseTracker
         UPDATE Purchases
         SET Shop = $shop,
             Date = $date,
-            Price = $price
+            Price = $price,
+            Category = $category
         WHERE Id = $id";
 
             cmd.Parameters.AddWithValue("$id", purchase.Id);
             cmd.Parameters.AddWithValue("$shop", purchase.Shop);
             cmd.Parameters.AddWithValue("$date", purchase.Date.ToUnixTimestamp());
             cmd.Parameters.AddWithValue("$price", purchase.Price);
+            cmd.Parameters.AddWithValue("$category", purchase.Category);
 
             cmd.ExecuteNonQuery();
             transaction.Commit();
@@ -148,7 +152,8 @@ namespace ExpenseTracker
                     Id = reader.GetInt32(0),
                     Shop = reader.GetString(1),
                     Date = reader.GetInt64(2).FromUnixTimestamp(),
-                    Price = reader.GetDecimal(3)
+                    Price = reader.GetDecimal(3),
+                    Category = reader.GetString(4)
                 };
 
                 yield return purchase;
@@ -183,9 +188,25 @@ namespace ExpenseTracker
                     Id = reader.GetInt32(0),
                     Shop = reader.GetString(1),
                     Date = reader.GetInt64(2).FromUnixTimestamp(),
-                    Price = reader.GetDecimal(3)
+                    Price = reader.GetDecimal(3),
+                    Category = reader.GetString(4)
                 };
             }
+        }
+
+        public static double GetAllTimeExpenses()
+        {
+            if (!IsInitialized)
+                throw new Exception("You must initialize the database first.");
+
+            using var connection = new SqliteConnection($"Data Source={_dbPath}");
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = @"SELECT SUM(Price) from Purchases";
+
+            var value = cmd.ExecuteScalar();
+            return (double)(value is DBNull ? 0d : value);
         }
     }
 }
