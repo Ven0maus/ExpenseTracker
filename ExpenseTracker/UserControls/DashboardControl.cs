@@ -277,39 +277,90 @@ namespace ExpenseTracker
 
         private void CalculateAverages()
         {
-            DateTime today = DateTime.Today;
+            var today = DateTime.Today;
+            var earliestDate = PurchaseDatabase.GetEarliestPurchaseDate();
 
-            // Daily (past 365 days)
-            var allDaily = PurchaseDatabase.GetByDates(today.AddDays(-364), today);
-            decimal avgDaily = allDaily.Length > 0 ? allDaily.Sum(p => p.Price) / 365m : 0;
+            // --- Daily average (based on distinct days with data)
+            var allDaily = PurchaseDatabase.GetByDates(earliestDate, today);
+            var totalDays = allDaily.Select(p => p.Date.Date).Distinct().Count();
+            decimal avgDaily = totalDays > 0 ? allDaily.Sum(p => p.Price) / totalDays : 0;
             NrAvgDailySpend.Text = Math.Round(avgDaily, 2).ToEuroFormat();
 
-            // Weekly (last 52 weeks)
+            // --- Weekly average (based on valid weeks with 3+ distinct days)
             decimal totalWeekly = 0;
-            for (int i = 0; i < 52; i++)
-            {
-                var (start, end) = today.AddDays(-7 * i).GetWeekRange();
-                totalWeekly += PurchaseDatabase.GetByDates(start, end).Sum(p => p.Price);
-            }
-            NrAvgWeeklySpend.Text = Math.Round(totalWeekly / 52m, 2).ToEuroFormat();
+            int validWeeks = 0;
+            var date = today;
 
-            // Monthly (last 12 months)
+            while (true)
+            {
+                var (start, end) = date.GetWeekRange();
+                if (start < earliestDate)
+                    break;
+
+                var weekPurchases = PurchaseDatabase.GetByDates(start, end);
+                var daysWithPurchases = weekPurchases.Select(p => p.Date.Date).Distinct().Count();
+
+                if (daysWithPurchases >= 3)
+                {
+                    totalWeekly += weekPurchases.Sum(p => p.Price);
+                    validWeeks++;
+                }
+
+                date = date.AddDays(-7);
+            }
+
+            decimal avgWeekly = validWeeks > 0 ? totalWeekly / validWeeks : 0;
+            NrAvgWeeklySpend.Text = Math.Round(avgWeekly, 2).ToEuroFormat();
+
+            // --- Monthly average (based on valid months with 5+ purchases)
             decimal totalMonthly = 0;
-            for (int i = 0; i < 12; i++)
-            {
-                var (start, end) = today.AddMonths(-i).GetMonthRange();
-                totalMonthly += PurchaseDatabase.GetByDates(start, end).Sum(p => p.Price);
-            }
-            NrAvgMonthlySpend.Text = Math.Round(totalMonthly / 12m, 2).ToEuroFormat();
+            int validMonths = 0;
+            date = today;
 
-            // Yearly (e.g., last 3 full years)
-            decimal totalYearly = 0;
-            for (int i = 0; i < 3; i++)
+            while (true)
             {
-                var (start, end) = today.AddYears(-i).GetYearRange();
-                totalYearly += PurchaseDatabase.GetByDates(start, end).Sum(p => p.Price);
+                var (start, end) = date.GetMonthRange();
+                if (start < earliestDate)
+                    break;
+
+                var monthPurchases = PurchaseDatabase.GetByDates(start, end);
+
+                if (monthPurchases.Length >= 5)
+                {
+                    totalMonthly += monthPurchases.Sum(p => p.Price);
+                    validMonths++;
+                }
+
+                date = date.AddMonths(-1);
             }
-            NrAvgYearlySpend.Text = Math.Round(totalYearly / 3m, 2).ToEuroFormat();
+
+            decimal avgMonthly = validMonths > 0 ? totalMonthly / validMonths : 0;
+            NrAvgMonthlySpend.Text = Math.Round(avgMonthly, 2).ToEuroFormat();
+
+            // --- Yearly average (based on valid years with 20+ purchases)
+            decimal totalYearly = 0;
+            int validYears = 0;
+            date = today;
+
+            while (true)
+            {
+                var (start, end) = date.GetYearRange();
+                if (start < earliestDate)
+                    break;
+
+                var yearPurchases = PurchaseDatabase.GetByDates(start, end);
+
+                if (yearPurchases.Length >= 20)
+                {
+                    totalYearly += yearPurchases.Sum(p => p.Price);
+                    validYears++;
+                }
+
+                date = date.AddYears(-1);
+            }
+
+            decimal avgYearly = validYears > 0 ? totalYearly / validYears : 0;
+            NrAvgYearlySpend.Text = Math.Round(avgYearly, 2).ToEuroFormat();
         }
 
         private void CalculateCategorySummary()

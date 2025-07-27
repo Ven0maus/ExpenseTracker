@@ -258,5 +258,30 @@ namespace ExpenseTracker
         {
             _purchaseDataByDateCache.Clear();
         }
+
+        private static DateTime? _earliestPurchaseDate;
+        public static DateTime GetEarliestPurchaseDate()
+        {
+            if (!IsInitialized)
+                throw new Exception("You must initialize the database first.");
+
+            if (_earliestPurchaseDate.HasValue) 
+                return _earliestPurchaseDate.Value;
+
+            using var connection = new SqliteConnection($"Data Source={_dbPath}");
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = "SELECT MIN(Date) FROM Purchases";
+
+            var result = cmd.ExecuteScalar();
+
+            if (result is DBNull or null)
+                return DateTime.Today;
+
+            var earliestUnix = Convert.ToInt64(result);
+            _earliestPurchaseDate = earliestUnix.FromUnixTimestamp();
+            return _earliestPurchaseDate.Value;
+        }
     }
 }
