@@ -14,6 +14,7 @@ namespace ExpenseTracker
             // Make sure we return new data, not cached data.
             PurchaseDatabase.ClearCaches();
 
+            // TODO: Off-thread calculations and marshall UI changes on UI thread
             CalculateBudget();
             CalculatePeriod(PeriodType.Weekly);
             CalculatePeriod(PeriodType.Monthly);

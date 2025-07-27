@@ -24,7 +24,7 @@
         private static readonly string[] _definedCategories =
         [
             "Groceries",
-            "Clothing & Goods",
+            "Clothes & Goods",
             "Entertainment",
             "Subscriptions",
             "Others"
