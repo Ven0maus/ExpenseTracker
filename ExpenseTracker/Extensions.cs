@@ -71,12 +71,28 @@ namespace ExpenseTracker
 
         public static string ToPercentageFormat(this double value)
         {
-            return $"{Math.Round(value, 2).ToString("0.##", CultureInfo.InvariantCulture)} %";
+            var absValue = Math.Abs(Math.Round(value, 2));
+            var formatted = absValue.ToString("0.##", CultureInfo.InvariantCulture);
+
+            if (value > 0)
+                return $"▲ {formatted} %";
+            else if (value < 0)
+                return $"▼ {formatted} %";
+            else
+                return $"{formatted} %";
         }
 
         public static string ToPercentageFormat(this decimal value)
         {
-            return $"{Math.Round(value, 2).ToString("0.##", CultureInfo.InvariantCulture)} %";
+            var absValue = Math.Abs(Math.Round(value, 2));
+            var formatted = absValue.ToString("0.##", CultureInfo.InvariantCulture);
+
+            if (value > 0)
+                return $"▲ {formatted} %";
+            else if (value < 0)
+                return $"▼ {formatted} %";
+            else
+                return $"{formatted} %";
         }
     }
 }

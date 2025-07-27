@@ -157,8 +157,10 @@
             Controls.Add(panel1);
             Font = new Font("Segoe Print", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             ForeColor = Color.Black;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
             Name = "AppForm";
             Text = "Expenses Tracker";
             panel1.ResumeLayout(false);

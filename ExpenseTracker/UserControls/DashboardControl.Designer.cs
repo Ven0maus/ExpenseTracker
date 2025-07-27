@@ -128,7 +128,7 @@
             panel1.Controls.Add(label1);
             panel1.Location = new Point(265, 41);
             panel1.Name = "panel1";
-            panel1.Size = new Size(254, 117);
+            panel1.Size = new Size(262, 117);
             panel1.TabIndex = 0;
             // 
             // NrComparedToLastMonth
@@ -136,7 +136,7 @@
             NrComparedToLastMonth.AutoSize = true;
             NrComparedToLastMonth.Font = new Font("Segoe UI", 12F);
             NrComparedToLastMonth.ForeColor = SystemColors.Control;
-            NrComparedToLastMonth.Location = new Point(192, 88);
+            NrComparedToLastMonth.Location = new Point(89, 88);
             NrComparedToLastMonth.Name = "NrComparedToLastMonth";
             NrComparedToLastMonth.Size = new Size(36, 21);
             NrComparedToLastMonth.TabIndex = 7;
@@ -149,9 +149,9 @@
             label2.ForeColor = SystemColors.Control;
             label2.Location = new Point(5, 87);
             label2.Name = "label2";
-            label2.Size = new Size(187, 21);
+            label2.Size = new Size(84, 21);
             label2.TabIndex = 6;
-            label2.Text = "Compared To Last Month:";
+            label2.Text = "Difference:";
             // 
             // NrLastMonthTotal
             // 
@@ -344,7 +344,7 @@
             NrComparedToLastWeek.AutoSize = true;
             NrComparedToLastWeek.Font = new Font("Segoe UI", 12F);
             NrComparedToLastWeek.ForeColor = SystemColors.Control;
-            NrComparedToLastWeek.Location = new Point(183, 88);
+            NrComparedToLastWeek.Location = new Point(89, 88);
             NrComparedToLastWeek.Name = "NrComparedToLastWeek";
             NrComparedToLastWeek.Size = new Size(36, 21);
             NrComparedToLastWeek.TabIndex = 7;
@@ -357,9 +357,9 @@
             label7.ForeColor = SystemColors.Control;
             label7.Location = new Point(5, 87);
             label7.Name = "label7";
-            label7.Size = new Size(179, 21);
+            label7.Size = new Size(84, 21);
             label7.TabIndex = 6;
-            label7.Text = "Compared To Last Week:";
+            label7.Text = "Difference:";
             // 
             // NrLastWeeKTotal
             // 
@@ -438,7 +438,7 @@
             panel4.Controls.Add(label20);
             panel4.Location = new Point(6, 7);
             panel4.Name = "panel4";
-            panel4.Size = new Size(750, 28);
+            panel4.Size = new Size(777, 28);
             panel4.TabIndex = 9;
             // 
             // NrBudgetLeft
@@ -518,9 +518,9 @@
             panel5.Controls.Add(label21);
             panel5.Controls.Add(NrThisYearTotal);
             panel5.Controls.Add(label23);
-            panel5.Location = new Point(525, 41);
+            panel5.Location = new Point(533, 41);
             panel5.Name = "panel5";
-            panel5.Size = new Size(231, 117);
+            panel5.Size = new Size(250, 117);
             panel5.TabIndex = 8;
             // 
             // NrComparedToLastYear
@@ -528,7 +528,7 @@
             NrComparedToLastYear.AutoSize = true;
             NrComparedToLastYear.Font = new Font("Segoe UI", 12F);
             NrComparedToLastYear.ForeColor = SystemColors.Control;
-            NrComparedToLastYear.Location = new Point(175, 88);
+            NrComparedToLastYear.Location = new Point(88, 88);
             NrComparedToLastYear.Name = "NrComparedToLastYear";
             NrComparedToLastYear.Size = new Size(36, 21);
             NrComparedToLastYear.TabIndex = 7;
@@ -541,9 +541,9 @@
             label15.ForeColor = SystemColors.Control;
             label15.Location = new Point(5, 87);
             label15.Name = "label15";
-            label15.Size = new Size(171, 21);
+            label15.Size = new Size(84, 21);
             label15.TabIndex = 6;
-            label15.Text = "Compared To Last Year:";
+            label15.Text = "Difference:";
             // 
             // NrLastYearTotal
             // 
@@ -775,7 +775,7 @@
             panel7.Controls.Add(label31);
             panel7.Location = new Point(525, 197);
             panel7.Name = "panel7";
-            panel7.Size = new Size(231, 202);
+            panel7.Size = new Size(258, 202);
             panel7.TabIndex = 10;
             // 
             // tableLayoutPanel2
@@ -801,7 +801,7 @@
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.Size = new Size(223, 147);
+            tableLayoutPanel2.Size = new Size(250, 147);
             tableLayoutPanel2.TabIndex = 1;
             // 
             // BigExpenseValue5
@@ -809,7 +809,7 @@
             BigExpenseValue5.AutoSize = true;
             BigExpenseValue5.Font = new Font("Segoe UI", 10F);
             BigExpenseValue5.ForeColor = SystemColors.Control;
-            BigExpenseValue5.Location = new Point(136, 120);
+            BigExpenseValue5.Location = new Point(153, 120);
             BigExpenseValue5.Name = "BigExpenseValue5";
             BigExpenseValue5.Size = new Size(20, 19);
             BigExpenseValue5.TabIndex = 17;
@@ -820,7 +820,7 @@
             BigExpenseValue4.AutoSize = true;
             BigExpenseValue4.Font = new Font("Segoe UI", 10F);
             BigExpenseValue4.ForeColor = SystemColors.Control;
-            BigExpenseValue4.Location = new Point(136, 90);
+            BigExpenseValue4.Location = new Point(153, 90);
             BigExpenseValue4.Name = "BigExpenseValue4";
             BigExpenseValue4.Size = new Size(20, 19);
             BigExpenseValue4.TabIndex = 16;
@@ -831,7 +831,7 @@
             BigExpenseValue3.AutoSize = true;
             BigExpenseValue3.Font = new Font("Segoe UI", 10F);
             BigExpenseValue3.ForeColor = SystemColors.Control;
-            BigExpenseValue3.Location = new Point(136, 60);
+            BigExpenseValue3.Location = new Point(153, 60);
             BigExpenseValue3.Name = "BigExpenseValue3";
             BigExpenseValue3.Size = new Size(20, 19);
             BigExpenseValue3.TabIndex = 15;
@@ -842,7 +842,7 @@
             BigExpenseValue2.AutoSize = true;
             BigExpenseValue2.Font = new Font("Segoe UI", 10F);
             BigExpenseValue2.ForeColor = SystemColors.Control;
-            BigExpenseValue2.Location = new Point(136, 30);
+            BigExpenseValue2.Location = new Point(153, 30);
             BigExpenseValue2.Name = "BigExpenseValue2";
             BigExpenseValue2.Size = new Size(20, 19);
             BigExpenseValue2.TabIndex = 14;
@@ -853,7 +853,7 @@
             BigExpenseValue1.AutoSize = true;
             BigExpenseValue1.Font = new Font("Segoe UI", 10F);
             BigExpenseValue1.ForeColor = SystemColors.Control;
-            BigExpenseValue1.Location = new Point(136, 0);
+            BigExpenseValue1.Location = new Point(153, 0);
             BigExpenseValue1.Name = "BigExpenseValue1";
             BigExpenseValue1.Size = new Size(20, 19);
             BigExpenseValue1.TabIndex = 13;
@@ -931,7 +931,7 @@
             panel8.Controls.Add(label32);
             panel8.Location = new Point(265, 164);
             panel8.Name = "panel8";
-            panel8.Size = new Size(491, 28);
+            panel8.Size = new Size(518, 28);
             panel8.TabIndex = 10;
             // 
             // label32
@@ -941,7 +941,7 @@
             label32.ForeColor = SystemColors.Control;
             label32.Location = new Point(0, 0);
             label32.Name = "label32";
-            label32.Size = new Size(491, 28);
+            label32.Size = new Size(518, 28);
             label32.TabIndex = 2;
             label32.Text = "This Month's Trend Information";
             label32.TextAlign = ContentAlignment.MiddleCenter;
@@ -953,7 +953,7 @@
             panel9.Controls.Add(label33);
             panel9.Location = new Point(265, 405);
             panel9.Name = "panel9";
-            panel9.Size = new Size(491, 227);
+            panel9.Size = new Size(518, 227);
             panel9.TabIndex = 9;
             // 
             // ListSpendingAnomalies
@@ -966,7 +966,7 @@
             ListSpendingAnomalies.Location = new Point(9, 37);
             ListSpendingAnomalies.Name = "ListSpendingAnomalies";
             ListSpendingAnomalies.SelectionMode = SelectionMode.None;
-            ListSpendingAnomalies.Size = new Size(475, 184);
+            ListSpendingAnomalies.Size = new Size(506, 184);
             ListSpendingAnomalies.TabIndex = 3;
             // 
             // label33
@@ -995,7 +995,7 @@
             Controls.Add(panel2);
             Controls.Add(panel1);
             Name = "DashboardControl";
-            Size = new Size(763, 637);
+            Size = new Size(786, 637);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel2.ResumeLayout(false);

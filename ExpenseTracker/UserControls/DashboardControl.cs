@@ -177,6 +177,10 @@ namespace ExpenseTracker
                     NrLastWeeKTotal.Text = lastPeriodTotal.ToEuroFormat();
                     NrThisWeekPrediction.Text = Math.Round(prediction, 0).ToEuroFormat();
                     NrComparedToLastWeek.Text = Math.Round(percentChange, 1).ToPercentageFormat();
+                    if (percentChange <= 0)
+                        NrComparedToLastWeek.ForeColor = Color.ForestGreen;
+                    else
+                        NrComparedToLastWeek.ForeColor = Color.Red;
                     break;
 
                 case PeriodType.Monthly:
@@ -184,6 +188,10 @@ namespace ExpenseTracker
                     NrLastMonthTotal.Text = lastPeriodTotal.ToEuroFormat();
                     NrThisMonthPrediction.Text = Math.Round(prediction, 0).ToEuroFormat();
                     NrComparedToLastMonth.Text = Math.Round(percentChange, 1).ToPercentageFormat();
+                    if (percentChange <= 0)
+                        NrComparedToLastMonth.ForeColor = Color.ForestGreen;
+                    else
+                        NrComparedToLastMonth.ForeColor = Color.Red;
                     break;
 
                 case PeriodType.Yearly:
@@ -191,6 +199,10 @@ namespace ExpenseTracker
                     NrLastYearTotal.Text = lastPeriodTotal.ToEuroFormat();
                     NrThisYearPrediction.Text = Math.Round(prediction, 0).ToEuroFormat();
                     NrComparedToLastYear.Text = Math.Round(percentChange, 1).ToPercentageFormat();
+                    if (percentChange <= 0)
+                        NrComparedToLastYear.ForeColor = Color.ForestGreen;
+                    else
+                        NrComparedToLastYear.ForeColor = Color.Red;
                     break;
             }
         }
