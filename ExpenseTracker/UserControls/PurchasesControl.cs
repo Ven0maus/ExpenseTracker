@@ -13,6 +13,7 @@ namespace ExpenseTracker
         public void OnLoad()
         {
             var today = DateTime.Today.Date;
+            PurchaseDatabase.ClearCaches();
             var purchases = PurchaseDatabase.GetByDates(today, today);
             PurchasesGrid.Rows.Clear();
             foreach (var purchase in purchases)
