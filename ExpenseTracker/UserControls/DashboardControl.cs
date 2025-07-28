@@ -5,6 +5,8 @@ namespace ExpenseTracker
 {
     public partial class DashboardControl : UserControl, IUserControl
     {
+        private bool _requireRefresh = true;
+
         public DashboardControl()
         {
             InitializeComponent();
@@ -12,6 +14,27 @@ namespace ExpenseTracker
 
         public void OnLoad()
         {
+            // Set current month and year without refresh
+            _requireRefresh = false;
+
+            // Populate years of data
+            CmbYearSelector.Items.Clear();
+            var yearsOfData = PurchaseDatabase.CollectYearsOfData();
+            foreach (var year in yearsOfData.OrderByDescending(a => a))
+                CmbYearSelector.Items.Add(year);
+
+            CmbMonthSelector.SelectedIndex = DateTime.Now.Month - 1;
+            CmbYearSelector.SelectedIndex = CmbYearSelector.Items.Count > 0 ? 0 : -1;
+            _requireRefresh = true;
+
+            RefreshDashboard();
+        }
+
+        private void RefreshDashboard()
+        {
+            var month = CmbMonthSelector.SelectedIndex + 1;
+            var year = DateTime.Now.Year - (CmbYearSelector.SelectedIndex != -1 ? CmbYearSelector.SelectedIndex : 0);
+
             // Make sure we return new data, not cached data.
             PurchaseDatabase.ClearCaches();
 
@@ -22,13 +45,14 @@ namespace ExpenseTracker
                 // Instead, collect all results into a container object.
                 var results = new CalculationResults
                 {
+                    // TODO: Pass along month, year to the data
                     BudgetData = CalculateBudget(),
                     WeeklyData = CalculatePeriod(PeriodType.Weekly),
                     MonthlyData = CalculatePeriod(PeriodType.Monthly),
                     YearlyData = CalculatePeriod(PeriodType.Yearly),
                     AveragesData = CalculateAverages(),
-                    CategorySummaryData = CalculateCategorySummary(),
-                    BiggestExpensesData = CalculateBiggestExpenses(),
+                    CategorySummaryData = CalculateCategorySummary(month, year),
+                    BiggestExpensesData = CalculateBiggestExpenses(month, year),
                     SpendingAnomaliesData = CalculateSpendingAnomalies()
                 };
 
@@ -417,9 +441,10 @@ namespace ExpenseTracker
             };
         }
 
-        private static CategorySummaryData CalculateCategorySummary()
+        private CategorySummaryData CalculateCategorySummary(int month, int year)
         {
-            var (start, end) = GetPeriodDateRange(DateTime.Now, PeriodType.Monthly);
+            var selectedDate = new DateTime(year, month, 1);
+            var (start, end) = GetPeriodDateRange(selectedDate, PeriodType.Monthly);
             var purchases = PurchaseDatabase.GetByDates(start, end);
 
             var topCategories = purchases
@@ -439,9 +464,10 @@ namespace ExpenseTracker
             };
         }
 
-        private static BiggestExpensesData CalculateBiggestExpenses()
+        private BiggestExpensesData CalculateBiggestExpenses(int month, int year)
         {
-            var (start, end) = GetPeriodDateRange(DateTime.Now, PeriodType.Monthly);
+            var selectedDate = new DateTime(year, month, 1);
+            var (start, end) = GetPeriodDateRange(selectedDate, PeriodType.Monthly);
             var purchases = PurchaseDatabase.GetByDates(start, end);
 
             // Group by shop and sum totals
@@ -495,6 +521,18 @@ namespace ExpenseTracker
                 default:
                     throw new ArgumentOutOfRangeException(nameof(period), period, null);
             }
+        }
+
+        private void CmbMonthSelector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_requireRefresh)
+                RefreshDashboard();
+        }
+
+        private void CmbYearSelector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_requireRefresh)
+                RefreshDashboard();
         }
 
         public enum PeriodType

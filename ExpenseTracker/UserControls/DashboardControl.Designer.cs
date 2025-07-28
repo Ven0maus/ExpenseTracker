@@ -56,12 +56,9 @@
             NrThisWeekTotal = new Label();
             label16 = new Label();
             panel4 = new Panel();
-            NrBudgetLeft = new Label();
-            label13 = new Label();
-            NrMonthlyBudget = new Label();
-            label9 = new Label();
-            NrTotalSpend = new Label();
-            label20 = new Label();
+            CmbYearSelector = new ComboBox();
+            label5 = new Label();
+            CmbMonthSelector = new ComboBox();
             panel5 = new Panel();
             NrComparedToLastYear = new Label();
             label15 = new Label();
@@ -102,6 +99,13 @@
             panel9 = new Panel();
             ListSpendingAnomalies = new ListBox();
             label33 = new Label();
+            panel10 = new Panel();
+            NrTotalSpend = new Label();
+            label22 = new Label();
+            NrBudgetLeft = new Label();
+            label25 = new Label();
+            NrMonthlyBudget = new Label();
+            label28 = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -113,6 +117,7 @@
             tableLayoutPanel2.SuspendLayout();
             panel8.SuspendLayout();
             panel9.SuspendLayout();
+            panel10.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
@@ -430,82 +435,50 @@
             // panel4
             // 
             panel4.BackColor = Color.FromArgb(25, 30, 50);
-            panel4.Controls.Add(NrBudgetLeft);
-            panel4.Controls.Add(label13);
-            panel4.Controls.Add(NrMonthlyBudget);
-            panel4.Controls.Add(label9);
-            panel4.Controls.Add(NrTotalSpend);
-            panel4.Controls.Add(label20);
+            panel4.Controls.Add(CmbYearSelector);
+            panel4.Controls.Add(label5);
+            panel4.Controls.Add(CmbMonthSelector);
             panel4.Location = new Point(6, 7);
             panel4.Name = "panel4";
             panel4.Size = new Size(777, 28);
             panel4.TabIndex = 9;
             // 
-            // NrBudgetLeft
+            // CmbYearSelector
             // 
-            NrBudgetLeft.AutoSize = true;
-            NrBudgetLeft.Font = new Font("Segoe UI", 12F);
-            NrBudgetLeft.ForeColor = SystemColors.Control;
-            NrBudgetLeft.Location = new Point(614, 4);
-            NrBudgetLeft.Name = "NrBudgetLeft";
-            NrBudgetLeft.Size = new Size(32, 21);
-            NrBudgetLeft.TabIndex = 5;
-            NrBudgetLeft.Text = "€ 0";
+            CmbYearSelector.BackColor = Color.FromArgb(25, 30, 50);
+            CmbYearSelector.DropDownStyle = ComboBoxStyle.DropDownList;
+            CmbYearSelector.ForeColor = Color.White;
+            CmbYearSelector.FormattingEnabled = true;
+            CmbYearSelector.Location = new Point(710, 2);
+            CmbYearSelector.Name = "CmbYearSelector";
+            CmbYearSelector.Size = new Size(65, 23);
+            CmbYearSelector.TabIndex = 4;
+            CmbYearSelector.SelectedIndexChanged += CmbYearSelector_SelectedIndexChanged;
             // 
-            // label13
+            // label5
             // 
-            label13.AutoSize = true;
-            label13.Font = new Font("Segoe UI", 12F);
-            label13.ForeColor = SystemColors.Control;
-            label13.Location = new Point(523, 4);
-            label13.Name = "label13";
-            label13.Size = new Size(92, 21);
-            label13.TabIndex = 4;
-            label13.Text = "Budget Left:";
+            label5.BackColor = Color.Transparent;
+            label5.Font = new Font("PMingLiU-ExtB", 16F, FontStyle.Bold);
+            label5.ForeColor = SystemColors.Control;
+            label5.Location = new Point(0, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(583, 28);
+            label5.TabIndex = 3;
+            label5.Text = "Dashboard";
+            label5.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // NrMonthlyBudget
+            // CmbMonthSelector
             // 
-            NrMonthlyBudget.AutoSize = true;
-            NrMonthlyBudget.Font = new Font("Segoe UI", 12F);
-            NrMonthlyBudget.ForeColor = SystemColors.Control;
-            NrMonthlyBudget.Location = new Point(385, 4);
-            NrMonthlyBudget.Name = "NrMonthlyBudget";
-            NrMonthlyBudget.Size = new Size(32, 21);
-            NrMonthlyBudget.TabIndex = 3;
-            NrMonthlyBudget.Text = "€ 0";
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Font = new Font("Segoe UI", 12F);
-            label9.ForeColor = SystemColors.Control;
-            label9.Location = new Point(262, 4);
-            label9.Name = "label9";
-            label9.Size = new Size(124, 21);
-            label9.TabIndex = 2;
-            label9.Text = "Monthly Budget:";
-            // 
-            // NrTotalSpend
-            // 
-            NrTotalSpend.AutoSize = true;
-            NrTotalSpend.Font = new Font("Segoe UI", 12F);
-            NrTotalSpend.ForeColor = SystemColors.Control;
-            NrTotalSpend.Location = new Point(93, 4);
-            NrTotalSpend.Name = "NrTotalSpend";
-            NrTotalSpend.Size = new Size(32, 21);
-            NrTotalSpend.TabIndex = 1;
-            NrTotalSpend.Text = "€ 0";
-            // 
-            // label20
-            // 
-            label20.AutoSize = true;
-            label20.Font = new Font("Segoe UI", 12F);
-            label20.ForeColor = SystemColors.Control;
-            label20.Location = new Point(5, 4);
-            label20.Name = "label20";
-            label20.Size = new Size(89, 21);
-            label20.TabIndex = 0;
-            label20.Text = "Total Spent:";
+            CmbMonthSelector.BackColor = Color.FromArgb(25, 30, 50);
+            CmbMonthSelector.DropDownStyle = ComboBoxStyle.DropDownList;
+            CmbMonthSelector.ForeColor = Color.White;
+            CmbMonthSelector.FormattingEnabled = true;
+            CmbMonthSelector.Items.AddRange(new object[] { "Januari", "Februari", "March", "May", "April", "June", "July", "August", "September", "October", "November", "December" });
+            CmbMonthSelector.Location = new Point(589, 2);
+            CmbMonthSelector.Name = "CmbMonthSelector";
+            CmbMonthSelector.Size = new Size(116, 23);
+            CmbMonthSelector.TabIndex = 3;
+            CmbMonthSelector.SelectedIndexChanged += CmbMonthSelector_SelectedIndexChanged;
             // 
             // panel5
             // 
@@ -943,7 +916,7 @@
             label32.Name = "label32";
             label32.Size = new Size(518, 28);
             label32.TabIndex = 2;
-            label32.Text = "This Month's Trend Information";
+            label32.Text = "Monthly Trend Information";
             label32.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // panel9
@@ -980,11 +953,92 @@
             label33.TabIndex = 2;
             label33.Text = "Spending Anomalies";
             // 
+            // panel10
+            // 
+            panel10.BackColor = Color.FromArgb(25, 30, 50);
+            panel10.Controls.Add(NrTotalSpend);
+            panel10.Controls.Add(label22);
+            panel10.Controls.Add(NrBudgetLeft);
+            panel10.Controls.Add(label25);
+            panel10.Controls.Add(NrMonthlyBudget);
+            panel10.Controls.Add(label28);
+            panel10.Location = new Point(6, 287);
+            panel10.Name = "panel10";
+            panel10.Size = new Size(254, 96);
+            panel10.TabIndex = 9;
+            // 
+            // NrTotalSpend
+            // 
+            NrTotalSpend.AutoSize = true;
+            NrTotalSpend.Font = new Font("Segoe UI", 12F);
+            NrTotalSpend.ForeColor = SystemColors.Control;
+            NrTotalSpend.Location = new Point(149, 65);
+            NrTotalSpend.Name = "NrTotalSpend";
+            NrTotalSpend.Size = new Size(32, 21);
+            NrTotalSpend.TabIndex = 5;
+            NrTotalSpend.Text = "€ 0";
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Font = new Font("Segoe UI", 12F);
+            label22.ForeColor = SystemColors.Control;
+            label22.Location = new Point(5, 64);
+            label22.Name = "label22";
+            label22.Size = new Size(146, 21);
+            label22.TabIndex = 4;
+            label22.Text = "Lifetime Spendings:";
+            // 
+            // NrBudgetLeft
+            // 
+            NrBudgetLeft.AutoSize = true;
+            NrBudgetLeft.Font = new Font("Segoe UI", 12F);
+            NrBudgetLeft.ForeColor = SystemColors.Control;
+            NrBudgetLeft.Location = new Point(122, 38);
+            NrBudgetLeft.Name = "NrBudgetLeft";
+            NrBudgetLeft.Size = new Size(32, 21);
+            NrBudgetLeft.TabIndex = 3;
+            NrBudgetLeft.Text = "€ 0";
+            // 
+            // label25
+            // 
+            label25.AutoSize = true;
+            label25.Font = new Font("Segoe UI", 12F);
+            label25.ForeColor = SystemColors.Control;
+            label25.Location = new Point(5, 38);
+            label25.Name = "label25";
+            label25.Size = new Size(119, 21);
+            label25.TabIndex = 2;
+            label25.Text = "Current Budget:";
+            // 
+            // NrMonthlyBudget
+            // 
+            NrMonthlyBudget.AutoSize = true;
+            NrMonthlyBudget.Font = new Font("Segoe UI", 12F);
+            NrMonthlyBudget.ForeColor = SystemColors.Control;
+            NrMonthlyBudget.Location = new Point(128, 11);
+            NrMonthlyBudget.Name = "NrMonthlyBudget";
+            NrMonthlyBudget.Size = new Size(32, 21);
+            NrMonthlyBudget.TabIndex = 1;
+            NrMonthlyBudget.Text = "€ 0";
+            // 
+            // label28
+            // 
+            label28.AutoSize = true;
+            label28.Font = new Font("Segoe UI", 12F);
+            label28.ForeColor = SystemColors.Control;
+            label28.Location = new Point(5, 11);
+            label28.Name = "label28";
+            label28.Size = new Size(124, 21);
+            label28.TabIndex = 0;
+            label28.Text = "Monthly Budget:";
+            // 
             // DashboardControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(34, 41, 64);
+            Controls.Add(panel10);
             Controls.Add(panel9);
             Controls.Add(panel8);
             Controls.Add(panel7);
@@ -1003,7 +1057,6 @@
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
             panel4.ResumeLayout(false);
-            panel4.PerformLayout();
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
             panel6.ResumeLayout(false);
@@ -1017,6 +1070,8 @@
             panel8.ResumeLayout(false);
             panel9.ResumeLayout(false);
             panel9.PerformLayout();
+            panel10.ResumeLayout(false);
+            panel10.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1054,7 +1109,6 @@
         private Label label20;
         private Label NrBudgetLeft;
         private Label label13;
-        private Label NrMonthlyBudget;
         private Label label9;
         private Panel panel5;
         private Label NrComparedToLastYear;
@@ -1096,5 +1150,15 @@
         private Panel panel9;
         private Label label33;
         private ListBox ListSpendingAnomalies;
+        private ComboBox CmbMonthSelector;
+        private Panel panel10;
+        private Label label17;
+        private Label label19;
+        private Label label22;
+        private Label label25;
+        private Label NrMonthlyBudget;
+        private Label label28;
+        private Label label5;
+        private ComboBox CmbYearSelector;
     }
 }

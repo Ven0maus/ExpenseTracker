@@ -287,5 +287,30 @@ namespace ExpenseTracker.Core
             _earliestPurchaseDate = earliestUnix.FromUnixTimestamp();
             return _earliestPurchaseDate.Value;
         }
+
+        public static IEnumerable<int> CollectYearsOfData()
+        {
+            if (!IsInitialized)
+                throw new Exception("You must initialize the database first.");
+
+            using var connection = new SqliteConnection($"Data Source={_dbPath}");
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = @"
+        SELECT DISTINCT strftime('%Y', datetime(Date, 'unixepoch')) AS Year
+        FROM Purchases
+        ORDER BY Year;";
+
+            using var reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                if (int.TryParse(reader.GetString(0), out int year))
+                {
+                    yield return year;
+                }
+            }
+        }
     }
 }
