@@ -15,6 +15,10 @@ namespace ExpenseTracker.Core
 
             _dbPath = dbPath;
 
+            var dir = Path.GetDirectoryName(_dbPath);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
             using var connection = new SqliteConnection($"Data Source={_dbPath}");
             connection.Open();
 
