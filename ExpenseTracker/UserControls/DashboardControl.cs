@@ -45,15 +45,14 @@ namespace ExpenseTracker
                 // Instead, collect all results into a container object.
                 var results = new CalculationResults
                 {
-                    // TODO: Pass along month, year to the data
-                    BudgetData = CalculateBudget(),
-                    WeeklyData = CalculatePeriod(PeriodType.Weekly),
-                    MonthlyData = CalculatePeriod(PeriodType.Monthly),
-                    YearlyData = CalculatePeriod(PeriodType.Yearly),
-                    AveragesData = CalculateAverages(),
+                    BudgetData = CalculateBudget(month, year),
+                    WeeklyData = CalculatePeriod(month, year, PeriodType.Weekly),
+                    MonthlyData = CalculatePeriod(month, year, PeriodType.Monthly),
+                    YearlyData = CalculatePeriod(month, year, PeriodType.Yearly),
+                    AveragesData = CalculateAverages(month, year),
                     CategorySummaryData = CalculateCategorySummary(month, year),
                     BiggestExpensesData = CalculateBiggestExpenses(month, year),
-                    SpendingAnomaliesData = CalculateSpendingAnomalies()
+                    SpendingAnomaliesData = CalculateSpendingAnomalies(month, year)
                 };
 
                 // Clear Cache as to not retain old information in cache for no reason
@@ -189,12 +188,19 @@ namespace ExpenseTracker
                 ListSpendingAnomalies.Items.Add(insight.Message);
         }
 
-        private static BudgetData CalculateBudget()
+        private static BudgetData CalculateBudget(int month, int year)
         {
+            var today = DateTime.Today;
+            if (today.Year != year || today.Month != month)
+            {
+                int day = DateTime.DaysInMonth(year, month);
+                today = new DateTime(year, month, day);
+            }
+
             var totalSpend = PurchaseDatabase.GetAllTimeExpenses();
             var settingsControl = AppForm.Instance.GetInstance<SettingsControl>(Views.Settings);
             var monthlyBudget = settingsControl.Settings.MonthlyBudget;
-            var (start, end) = DateTime.Now.GetMonthRange();
+            var (start, end) = today.GetMonthRange();
             var spendThisMonth = (decimal)PurchaseDatabase.GetExpensesByDates(start, end);
             var budgetLeft = monthlyBudget - spendThisMonth;
 
@@ -206,9 +212,14 @@ namespace ExpenseTracker
             };
         }
 
-        private static PeriodData CalculatePeriod(PeriodType period)
+        private static PeriodData CalculatePeriod(int month, int year, PeriodType period)
         {
             var today = DateTime.Today;
+            if (today.Year != year || today.Month != month)
+            {
+                int day = DateTime.DaysInMonth(year, month);
+                today = new DateTime(year, month, day);
+            }
 
             DateTime thisPeriodStart;
             DateTime thisPeriodEnd;
@@ -337,9 +348,14 @@ namespace ExpenseTracker
             };
         }
 
-        private static AveragesData CalculateAverages()
+        private static AveragesData CalculateAverages(int month, int year)
         {
             var today = DateTime.Today;
+            if (today.Year != year || today.Month != month)
+            {
+                int day = DateTime.DaysInMonth(year, month);
+                today = new DateTime(year, month, day);
+            }
             var earliestDate = PurchaseDatabase.GetEarliestPurchaseDate();
 
             // Define lookback limits
@@ -488,9 +504,9 @@ namespace ExpenseTracker
             };
         }
 
-        private static SpendingInsight[] CalculateSpendingAnomalies()
+        private static SpendingInsight[] CalculateSpendingAnomalies(int month, int year)
         {
-            return InsightGenerators.GetInsights();
+            return InsightGenerators.GetInsights(month, year);
         }
 
         private static (DateTime start, DateTime end) GetPeriodDateRange(DateTime referenceDate, PeriodType period)

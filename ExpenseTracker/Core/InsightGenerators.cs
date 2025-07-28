@@ -30,16 +30,32 @@
             "Others"
         ];
 
-        public static SpendingInsight[] GetInsights()
+        private static int _month, _year;
+
+        public static SpendingInsight[] GetInsights(int month, int year)
         {
+            _month = month;
+            _year = year;
+
             return [.. _generators
                 .Select(generator => generator())
                 .Where(insight => insight != null)];
         }
 
-        public static SpendingInsight DetectBudgetProgress()
+        private static DateTime TodayByMonthAndYear()
         {
             var today = DateTime.Today;
+            if (today.Year != _year || today.Month != _month)
+            {
+                int day = DateTime.DaysInMonth(_year, _month);
+                today = new DateTime(_year, _month, day);
+            }
+            return today;
+        }
+
+        public static SpendingInsight DetectBudgetProgress()
+        {
+            var today = TodayByMonthAndYear();
 
             // Month start and end
             var monthStart = new DateTime(today.Year, today.Month, 1);
@@ -80,7 +96,7 @@
 
         public static SpendingInsight DetectMostCommonPurchaseDay()
         {
-            var today = DateTime.Today;
+            var today = TodayByMonthAndYear();
             var startDate = today.AddDays(-90); // last 3 months
 
             var purchases = PurchaseDatabase.GetByDates(startDate, today);
@@ -118,7 +134,7 @@
 
         public static SpendingInsight DetectAveragePurchaseChange()
         {
-            var today = DateTime.Today;
+            var today = TodayByMonthAndYear();
 
             // Get this month range
             var thisMonthStart = new DateTime(today.Year, today.Month, 1);
@@ -157,7 +173,7 @@
 
         private static SpendingInsight CompareWeeklySpending()
         {
-            var today = DateTime.Today;
+            var today = TodayByMonthAndYear();
             var (thisWeekStart, thisWeekEnd) = today.GetWeekRange();
             var (lastWeekStart, lastWeekEnd) = today.AddDays(-7).GetWeekRange();
 
@@ -182,7 +198,7 @@
             int streak = 0;
             for (int i = 0; i < 10; i++)
             {
-                var date = DateTime.Today.AddDays(-i);
+                var date = TodayByMonthAndYear().AddDays(-i);
                 var purchases = PurchaseDatabase.GetByDates(date, date);
                 if (purchases.Length != 0) streak++;
                 else break;
@@ -202,7 +218,7 @@
 
         private static SpendingInsight DetectBiggestPurchaseThisWeek()
         {
-            var (start, end) = DateTime.Today.GetWeekRange();
+            var (start, end) = TodayByMonthAndYear().GetWeekRange();
             var purchases = PurchaseDatabase.GetByDates(start, end);
 
             var biggest = purchases.OrderByDescending(p => p.Price).FirstOrDefault();
@@ -217,7 +233,7 @@
 
         private static SpendingInsight CompareMonthlyDailyAverage()
         {
-            var today = DateTime.Today;
+            var today = TodayByMonthAndYear();
             var thisMonthStart = new DateTime(today.Year, today.Month, 1);
             var lastMonthStart = thisMonthStart.AddMonths(-1);
             var lastMonthEnd = thisMonthStart.AddDays(-1);
@@ -246,7 +262,7 @@
 
         private static SpendingInsight DetectTopCategoryChange()
         {
-            var today = DateTime.Today;
+            var today = TodayByMonthAndYear();
             var thisMonthStart = new DateTime(today.Year, today.Month, 1);
             var lastMonthStart = thisMonthStart.AddMonths(-1);
             var lastMonthEnd = thisMonthStart.AddDays(-1);
@@ -291,7 +307,7 @@
 
             for (int i = 0; i < weeks; i++)
             {
-                var (start, end) = DateTime.Today.AddDays(-7 * i).GetWeekRange();
+                var (start, end) = TodayByMonthAndYear().AddDays(-7 * i).GetWeekRange();
                 totals[weeks - 1 - i] = PurchaseDatabase.GetByDates(start, end).Sum(p => p.Price);
             }
 
@@ -327,7 +343,7 @@
 
         public static SpendingInsight DetectDailyAverageAboveUsual()
         {
-            var today = DateTime.Today;
+            var today = TodayByMonthAndYear();
             var thisMonthStart = new DateTime(today.Year, today.Month, 1);
             var thisMonthEnd = thisMonthStart.AddMonths(1).AddDays(-1);
 
@@ -357,7 +373,7 @@
 
         public static SpendingInsight DetectQuietCategory()
         {
-            var (start, end) = DateTime.Today.GetMonthRange();
+            var (start, end) = TodayByMonthAndYear().GetMonthRange();
             var purchases = PurchaseDatabase.GetByDates(start, end);
 
             var categories = purchases.GroupBy(p => p.Category)
@@ -379,7 +395,7 @@
 
         public static SpendingInsight GetHighestSpendingMonthSince()
         {
-            var now = DateTime.Today;
+            var now = TodayByMonthAndYear();
             var currentMonthStart = new DateTime(now.Year, now.Month, 1);
             var currentMonthEnd = currentMonthStart.AddMonths(1).AddDays(-1);
 
@@ -419,7 +435,7 @@
 
         public static SpendingInsight DetectWeekendSpendingSurge()
         {
-            var now = DateTime.Today;
+            var now = TodayByMonthAndYear();
             var start = now.AddDays(-28); // Last 4 weeks
             var purchases = PurchaseDatabase.GetByDates(start, now);
 
@@ -442,7 +458,7 @@
 
             for (int i = 1; i <= 7; i++)
             {
-                var date = DateTime.Today.AddDays(-i);
+                var date = TodayByMonthAndYear().AddDays(-i);
                 var purchases = PurchaseDatabase.GetByDates(date, date);
                 if (purchases.Length == 0) noSpendStreak++;
                 else break;
@@ -462,7 +478,7 @@
 
         public static SpendingInsight DetectMostFrequentShops()
         {
-            var (start, end) = DateTime.Now.GetMonthRange();
+            var (start, end) = TodayByMonthAndYear().GetMonthRange();
             var purchases = PurchaseDatabase.GetByDates(start, end);
             if (purchases == null || purchases.Length == 0)
                 return null;
