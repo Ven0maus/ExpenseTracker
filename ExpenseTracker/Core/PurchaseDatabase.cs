@@ -22,7 +22,7 @@ namespace ExpenseTracker.Core
             using var connection = new SqliteConnection($"Data Source={_dbPath}");
             connection.Open();
 
-            var tableCmd = connection.CreateCommand();
+            using var tableCmd = connection.CreateCommand();
             tableCmd.CommandText = @"
     CREATE TABLE IF NOT EXISTS Purchases (
         Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,7 +42,7 @@ namespace ExpenseTracker.Core
             using var connection = new SqliteConnection($"Data Source={_dbPath}");
             connection.Open();
 
-            var cmd = connection.CreateCommand();
+            using var cmd = connection.CreateCommand();
             cmd.CommandText = "SELECT * FROM Purchases WHERE Id = $id";
             cmd.Parameters.AddWithValue("$id", id);
 
@@ -70,9 +70,9 @@ namespace ExpenseTracker.Core
             using var connection = new SqliteConnection($"Data Source={_dbPath}");
             connection.Open();
 
-            var transaction = connection.BeginTransaction();
+            using var transaction = connection.BeginTransaction();
 
-            var purchaseCmd = connection.CreateCommand();
+            using var purchaseCmd = connection.CreateCommand();
             purchaseCmd.CommandText = @"
         INSERT INTO Purchases (Shop, Date, Price, Category)
         VALUES ($shop, $date, $price, $category)";
@@ -83,7 +83,7 @@ namespace ExpenseTracker.Core
             purchaseCmd.ExecuteNonQuery();
 
             // Get the last inserted row ID
-            var idCmd = connection.CreateCommand();
+            using var idCmd = connection.CreateCommand();
             idCmd.Transaction = transaction; // keep within the transaction scope
             idCmd.CommandText = "SELECT last_insert_rowid();";
             var id = (long)idCmd.ExecuteScalar();
@@ -100,8 +100,8 @@ namespace ExpenseTracker.Core
             using var connection = new SqliteConnection($"Data Source={_dbPath}");
             connection.Open();
 
-            var transaction = connection.BeginTransaction();
-            var cmd = connection.CreateCommand();
+            using var transaction = connection.BeginTransaction();
+            using var cmd = connection.CreateCommand();
             cmd.CommandText = @"
         UPDATE Purchases
         SET Shop = $shop,
@@ -128,8 +128,8 @@ namespace ExpenseTracker.Core
             using var connection = new SqliteConnection($"Data Source={_dbPath}");
             connection.Open();
 
-            var transaction = connection.BeginTransaction();
-            var cmd = connection.CreateCommand();
+            using var transaction = connection.BeginTransaction();
+            using var cmd = connection.CreateCommand();
             cmd.CommandText = "DELETE FROM Purchases WHERE Id = $id";
             cmd.Parameters.AddWithValue("$id", purchase.Id);
 
@@ -145,7 +145,7 @@ namespace ExpenseTracker.Core
             using var connection = new SqliteConnection($"Data Source={_dbPath}");
             connection.Open();
 
-            var purchaseCmd = connection.CreateCommand();
+            using var purchaseCmd = connection.CreateCommand();
             purchaseCmd.CommandText = "SELECT * FROM Purchases";
             using var reader = purchaseCmd.ExecuteReader();
 
@@ -187,7 +187,7 @@ namespace ExpenseTracker.Core
             using var connection = new SqliteConnection($"Data Source={_dbPath}");
             connection.Open();
 
-            var cmd = connection.CreateCommand();
+            using var cmd = connection.CreateCommand();
             cmd.CommandText = @"
         SELECT * FROM Purchases
         WHERE Date BETWEEN $from AND $to
@@ -225,7 +225,7 @@ namespace ExpenseTracker.Core
             using var connection = new SqliteConnection($"Data Source={_dbPath}");
             connection.Open();
 
-            var cmd = connection.CreateCommand();
+            using var cmd = connection.CreateCommand();
             cmd.CommandText = @"SELECT SUM(Price) from Purchases";
 
             var value = cmd.ExecuteScalar();
@@ -240,7 +240,7 @@ namespace ExpenseTracker.Core
             using var connection = new SqliteConnection($"Data Source={_dbPath}");
             connection.Open();
 
-            var cmd = connection.CreateCommand();
+            using var cmd = connection.CreateCommand();
             cmd.CommandText = @"
         SELECT SUM(Price)
         FROM Purchases
@@ -275,11 +275,10 @@ namespace ExpenseTracker.Core
             using var connection = new SqliteConnection($"Data Source={_dbPath}");
             connection.Open();
 
-            var cmd = connection.CreateCommand();
+            using var cmd = connection.CreateCommand();
             cmd.CommandText = "SELECT MIN(Date) FROM Purchases";
 
             var result = cmd.ExecuteScalar();
-
             if (result is DBNull or null)
                 return DateTime.Today;
 
@@ -296,7 +295,7 @@ namespace ExpenseTracker.Core
             using var connection = new SqliteConnection($"Data Source={_dbPath}");
             connection.Open();
 
-            var cmd = connection.CreateCommand();
+            using var cmd = connection.CreateCommand();
             cmd.CommandText = @"
         SELECT DISTINCT strftime('%Y', datetime(Date, 'unixepoch')) AS Year
         FROM Purchases

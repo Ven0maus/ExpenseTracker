@@ -38,10 +38,24 @@
             const int chanceForNoExpense = 20;
 
             var weightedCategories = BuildWeightedCategoryList();
+            var rent = rand.Next(800, 1001);
 
             for (int i=1; i < daysOfData + 1; i++)
             {
                 var day = now.AddDays(-i);
+
+                // Monthly rent
+                if (i % 30 == 0)
+                {
+                    PurchaseDatabase.Create(new Purchase
+                    {
+                        Category = "Rent",
+                        Shop = "Rent",
+                        Date = day,
+                        Price = rent
+                    });
+                    continue;
+                }
 
                 if (rand.Next(100) >= chanceForNoExpense)
                 {

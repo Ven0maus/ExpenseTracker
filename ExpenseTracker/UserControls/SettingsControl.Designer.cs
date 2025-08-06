@@ -31,6 +31,8 @@
             BtnSave = new Button();
             label1 = new Label();
             NrMonthlyBudget = new TextBox();
+            BtnResetDb = new Button();
+            BtnOpenDbFolder = new Button();
             SuspendLayout();
             // 
             // BtnSave
@@ -61,11 +63,33 @@
             NrMonthlyBudget.Size = new Size(149, 23);
             NrMonthlyBudget.TabIndex = 2;
             // 
+            // BtnResetDb
+            // 
+            BtnResetDb.Location = new Point(562, 584);
+            BtnResetDb.Name = "BtnResetDb";
+            BtnResetDb.Size = new Size(189, 32);
+            BtnResetDb.TabIndex = 3;
+            BtnResetDb.Text = "Reset Database";
+            BtnResetDb.UseVisualStyleBackColor = true;
+            BtnResetDb.Click += BtnResetDb_Click;
+            // 
+            // BtnOpenDbFolder
+            // 
+            BtnOpenDbFolder.Location = new Point(562, 546);
+            BtnOpenDbFolder.Name = "BtnOpenDbFolder";
+            BtnOpenDbFolder.Size = new Size(189, 32);
+            BtnOpenDbFolder.TabIndex = 4;
+            BtnOpenDbFolder.Text = "Open DB Folder";
+            BtnOpenDbFolder.UseVisualStyleBackColor = true;
+            BtnOpenDbFolder.Click += BtnOpenDbFolder_Click;
+            // 
             // SettingsControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(34, 41, 64);
+            Controls.Add(BtnOpenDbFolder);
+            Controls.Add(BtnResetDb);
             Controls.Add(NrMonthlyBudget);
             Controls.Add(label1);
             Controls.Add(BtnSave);
@@ -80,5 +104,7 @@
         private Button BtnSave;
         private Label label1;
         private TextBox NrMonthlyBudget;
+        private Button BtnResetDb;
+        private Button BtnOpenDbFolder;
     }
 }

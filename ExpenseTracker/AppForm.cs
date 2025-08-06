@@ -22,16 +22,36 @@ namespace ExpenseTracker
             LoadContent(_views[Views.Dashboard]);
         }
 
-        private static void InitDatabase()
+        private string _dbPath;
+        public string DbPath
         {
-            string dbPath = null;
+            get
+            {
+                if (!string.IsNullOrEmpty(_dbPath))
+                    return _dbPath;
 #if DEBUG
-            // Generate debug data + setup debug db
-            dbPath = Path.Combine(SettingsControl.GetAppStoragePath(), "expenses_debug.db");
-            TestDataCreator.InitDebugDatabase(dbPath, 365 * TestDataCreator.DebugDataYears, TestDataCreator.DebugDataSeed);
+                _dbPath = Path.Combine(SettingsControl.GetAppStoragePath(), "expenses_debug.db");
 #else
-            dbPath = Path.Combine(SettingsControl.GetAppStoragePath(), "expenses.db");
-            PurchaseDatabase.InitializeDatabase(dbPath);
+                _dbPath = Path.Combine(SettingsControl.GetAppStoragePath(), "expenses.db");
+#endif
+                return _dbPath;
+            }
+        }
+
+        public void InitDatabase()
+        {
+            var settings = SettingsControl.Settings;
+            if (settings.ResetDatabase)
+            {
+                File.Delete(DbPath);
+                settings.ResetDatabase = false;
+                SettingsControl.SaveFile();
+            }
+
+#if DEBUG
+            TestDataCreator.InitDebugDatabase(DbPath, 365 * TestDataCreator.DebugDataYears, TestDataCreator.DebugDataSeed);
+#else
+            PurchaseDatabase.InitializeDatabase(DbPath);
 #endif
         }
 
@@ -89,14 +109,6 @@ namespace ExpenseTracker
 
             LoadContent(castedControl, false);
             onLoad?.Invoke(castedControl);
-        }
-
-        public T GetInstance<T>(Views view) where T : UserControl, IUserControl
-        {
-            var control = _views[view];
-            if (control is not T castedControl)
-                return default;
-            return castedControl;
         }
     }
 

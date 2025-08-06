@@ -1,5 +1,5 @@
 ﻿using ExpenseTracker.UserControls;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
 
@@ -9,18 +9,21 @@ namespace ExpenseTracker
     {
         private static readonly Lazy<string> _settingsFilePath = new(GetSettingsFilePath);
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Settings Settings { get; set; }
+        public static Settings Settings { get; set; }
 
         private static readonly JsonSerializerOptions _serializerOptions = new()
         {
             WriteIndented = true
         };
 
+        static SettingsControl()
+        {
+            LoadFile();
+        }
+
         public SettingsControl()
         {
             InitializeComponent();
-            LoadFile();
         }
 
         public void OnLoad()
@@ -52,7 +55,7 @@ namespace ExpenseTracker
             return Path.Combine(GetAppStoragePath(), "settings.json");
         }
 
-        private void SaveFile()
+        public static void SaveFile()
         {
             var directory = Path.GetDirectoryName(_settingsFilePath.Value);
             if (!Directory.Exists(directory))
@@ -62,7 +65,7 @@ namespace ExpenseTracker
             File.WriteAllText(_settingsFilePath.Value, json);
         }
 
-        private void LoadFile()
+        private static void LoadFile()
         {
             if (File.Exists(_settingsFilePath.Value))
             {
@@ -72,7 +75,7 @@ namespace ExpenseTracker
                 {
                     Settings = JsonSerializer.Deserialize<Settings>(json);
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     File.Delete(_settingsFilePath.Value);
                 }
@@ -84,10 +87,29 @@ namespace ExpenseTracker
                 SaveFile();
             }
         }
+
+        private void BtnResetDb_Click(object sender, EventArgs e)
+        {
+            var msgBox = MessageBox.Show("This is a destructive action that cannot be undone, are you sure?", "Are you sure?", MessageBoxButtons.YesNo);
+            if (msgBox == DialogResult.Yes && File.Exists(AppForm.Instance.DbPath))
+            {
+                Settings.ResetDatabase = true;
+                SaveFile();
+
+                _ = MessageBox.Show("A restart of the application is required to continue.", "Restart required", MessageBoxButtons.OK);
+                Application.Exit();
+            }
+        }
+
+        private void BtnOpenDbFolder_Click(object sender, EventArgs e)
+        {
+            _ = Process.Start("explorer.exe", Path.GetDirectoryName(AppForm.Instance.DbPath));
+        }
     }
 
     public class Settings
     {
         public decimal MonthlyBudget { get; set; }
+        public bool ResetDatabase { get; set; } = false;
     }
 }

@@ -223,7 +223,7 @@
             // 
             CmbCategory.DropDownStyle = ComboBoxStyle.DropDownList;
             CmbCategory.FormattingEnabled = true;
-            CmbCategory.Items.AddRange(new object[] { "Groceries", "Clothes & Goods", "Entertainment", "Subscriptions", "Others" });
+            CmbCategory.Items.AddRange(new object[] { "Groceries", "Clothes & Goods", "Entertainment", "Subscriptions", "Rent", "Others" });
             CmbCategory.Location = new Point(533, 140);
             CmbCategory.Name = "CmbCategory";
             CmbCategory.Size = new Size(250, 23);

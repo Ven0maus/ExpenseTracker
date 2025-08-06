@@ -198,8 +198,7 @@ namespace ExpenseTracker
             }
 
             var totalSpend = PurchaseDatabase.GetAllTimeExpenses();
-            var settingsControl = AppForm.Instance.GetInstance<SettingsControl>(Views.Settings);
-            var monthlyBudget = settingsControl.Settings.MonthlyBudget;
+            var monthlyBudget = SettingsControl.Settings.MonthlyBudget;
             var (start, end) = today.GetMonthRange();
             var spendThisMonth = (decimal)PurchaseDatabase.GetExpensesByDates(start, end);
             var budgetLeft = monthlyBudget - spendThisMonth;

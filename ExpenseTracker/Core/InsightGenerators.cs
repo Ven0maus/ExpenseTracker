@@ -27,6 +27,7 @@
             "Clothes & Goods",
             "Entertainment",
             "Subscriptions",
+            "Rent",
             "Others"
         ];
 
@@ -64,8 +65,7 @@
             var purchasesThisMonth = PurchaseDatabase.GetByDates(monthStart, today);
             var totalSpent = purchasesThisMonth.Sum(p => p.Price);
 
-            var settingsControl = AppForm.Instance.GetInstance<SettingsControl>(Views.Settings);
-            var monthlyBudget = settingsControl.Settings.MonthlyBudget;
+            var monthlyBudget = SettingsControl.Settings.MonthlyBudget;
 
             // Percent of budget spent so far
             decimal percentSpent = monthlyBudget == 0 ? 0 : totalSpent / monthlyBudget * 100m;
