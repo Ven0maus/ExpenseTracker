@@ -456,7 +456,7 @@ namespace ExpenseTracker
             };
         }
 
-        private CategorySummaryData CalculateCategorySummary(int month, int year)
+        private static CategorySummaryData CalculateCategorySummary(int month, int year)
         {
             var selectedDate = new DateTime(year, month, 1);
             var (start, end) = GetPeriodDateRange(selectedDate, PeriodType.Monthly);
@@ -479,7 +479,7 @@ namespace ExpenseTracker
             };
         }
 
-        private BiggestExpensesData CalculateBiggestExpenses(int month, int year)
+        private static BiggestExpensesData CalculateBiggestExpenses(int month, int year)
         {
             var selectedDate = new DateTime(year, month, 1);
             var (start, end) = GetPeriodDateRange(selectedDate, PeriodType.Monthly);
