@@ -211,6 +211,14 @@ namespace ExpenseTracker
             };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="month">Selected month</param>
+        /// <param name="year">Selected year</param>
+        /// <param name="period">Time Period</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private static PeriodData CalculatePeriod(int month, int year, PeriodType period)
         {
             var today = DateTime.Today;
@@ -248,8 +256,11 @@ namespace ExpenseTracker
                 case PeriodType.Monthly:
                     // Start of current month
                     thisPeriodStart = new DateTime(today.Year, today.Month, 1);
-                    // End of current month
-                    thisPeriodEnd = thisPeriodStart.AddMonths(1).AddDays(-1);
+
+                    // End of month is today if selected month/year is current, otherwise end of that month
+                    thisPeriodEnd = (year == DateTime.Today.Year && month == DateTime.Today.Month)
+                        ? DateTime.Today
+                        : thisPeriodStart.AddMonths(1).AddDays(-1);
 
                     lastPeriodStart = thisPeriodStart.AddMonths(-1);
                     lastPeriodEnd = thisPeriodStart.AddDays(-1);
@@ -261,8 +272,12 @@ namespace ExpenseTracker
                 case PeriodType.Yearly:
                     // Start of current year
                     thisPeriodStart = new DateTime(today.Year, 1, 1);
-                    // End of current year
-                    thisPeriodEnd = new DateTime(today.Year, 12, 31);
+
+                    // End of year is today if selected year is current, otherwise end of that year
+                    thisPeriodEnd = year == DateTime.Today.Year
+                        ? month == DateTime.Today.Month ? DateTime.Now : 
+                            new DateTime(DateTime.Today.Year, month, DateTime.DaysInMonth(DateTime.Today.Year, month))
+                        : new DateTime(today.Year, 12, 31);
 
                     lastPeriodStart = thisPeriodStart.AddYears(-1);
                     lastPeriodEnd = thisPeriodStart.AddDays(-1);
